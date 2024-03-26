@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SudokuBoard.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">e3</a> &gt; <a href="index.source.html" class="el_package">exercise.model</a> &gt; <span class="el_source">SudokuBoard.java</span></div><h1>SudokuBoard.java</h1><pre class="source lang-java linenums">package exercise.model;
+
+import exercise.exceptions.InvalidSudokuException;
+import exercise.solver.SudokuSolver;
+
+public class SudokuBoard {
+    public static final int BOARD_SIZE = 9;
+
+    private SudokuSolver solver;
+    private int[][] board;
+
+<span class="fc" id="L12">    public SudokuBoard(SudokuSolver solver) {</span>
+<span class="fc" id="L13">        this.solver = solver;</span>
+<span class="fc" id="L14">        board = new int[BOARD_SIZE][BOARD_SIZE];</span>
+<span class="fc" id="L15">    }</span>
+
+    public int get(int x, int y) {
+<span class="nc" id="L18">        return board[y][x];</span>
+    }
+
+    public void set(int x, int y, int value) {
+<span class="fc" id="L22">        board[y][x] = value;</span>
+<span class="fc" id="L23">    }</span>
+
+    public int[][] getBoard() {
+<span class="fc" id="L26">        return board;</span>
+    }
+
+    public void solveGame() throws InvalidSudokuException {
+<span class="fc" id="L30">        solver.solve(this);</span>
+<span class="fc" id="L31">    }</span>
+
+    public boolean isValidSudoku() {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for (int i = 0; i &lt; BOARD_SIZE; i++) {</span>
+<span class="fc" id="L35">            boolean[] row = new boolean[BOARD_SIZE];</span>
+<span class="fc" id="L36">            boolean[] col = new boolean[BOARD_SIZE];</span>
+<span class="fc" id="L37">            boolean[] block = new boolean[BOARD_SIZE];</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">            for (int j = 0; j &lt; BOARD_SIZE; j++) {</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">                if (board[i][j] != 0) {</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">                    if (row[board[i][j] - 1]) {</span>
+<span class="fc" id="L41">                        return false;</span>
+                    }
+<span class="fc" id="L43">                    row[board[i][j] - 1] = true;</span>
+                }
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">                if (board[j][i] != 0) {</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">                    if (col[board[j][i] - 1]) {</span>
+<span class="fc" id="L47">                        return false;</span>
+                    }
+<span class="fc" id="L49">                    col[board[j][i] - 1] = true;</span>
+                }
+<span class="fc" id="L51">                int blockRowIndex = 3 * (i / 3);</span>
+<span class="fc" id="L52">                int blockColIndex = 3 * (i % 3);</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">                if (board[blockRowIndex + j / 3][blockColIndex + j % 3] != 0) {</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">                    if (block[board[blockRowIndex + j / 3][blockColIndex + j % 3] - 1]) {</span>
+<span class="fc" id="L55">                        return false;</span>
+                    }
+<span class="fc" id="L57">                    block[board[blockRowIndex + j / 3][blockColIndex + j % 3] - 1] = true;</span>
+                }
+            }
+        }
+<span class="fc" id="L61">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
