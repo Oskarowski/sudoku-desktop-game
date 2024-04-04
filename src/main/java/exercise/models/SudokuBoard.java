@@ -1,10 +1,10 @@
 package exercise.models;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import exercise.exceptions.InvalidSudokuException;
 import exercise.solver.SudokuSolver;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class SudokuBoard implements PropertyChangeListener {
     public static final int BOARD_SIZE = 9;

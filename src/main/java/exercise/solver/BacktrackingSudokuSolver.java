@@ -78,9 +78,9 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         int previousValue = board.getField(col, row).getValue();
         board.getField(col, row).setValue(num);
 
-        boolean validPlacement = board.getRow(row).verify() &&
-                board.getColumn(col).verify() &&
-                board.getBox(boxIndex).verify();
+        boolean validPlacement = board.getRow(row).verify()
+                && board.getColumn(col).verify()
+                && board.getBox(boxIndex).verify();
 
         // bring back the value
         board.getField(col, row).setValue(previousValue);
