@@ -50,10 +50,24 @@ public class SudokuBoard {
         }
     }
 
+    /**
+     * Retrieves the SudokuField at the specified coordinates.
+     *
+     * @param x The column, x-coordinate of the field.
+     * @param y The row, y-coordinate of the field.
+     * @return The SudokuField at the specified coordinates.
+     */
     public SudokuField getField(int x, int y) {
         return rows[y].getFields()[x];
     }
 
+    /**
+     * Sets the value of a field in the Sudoku board at the specified coordinates.
+     *
+     * @param x     the column, x-coordinate of the field
+     * @param y     the row, y-coordinate of the field
+     * @param value the value to be set in the field
+     */
     public void setField(int x, int y, int value) {
         SudokuField field = rows[y].getFields()[x];
         field.setValue(value);
