@@ -75,9 +75,17 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         // when dividing on ints, we truncate the result
         final int boxIndex = (col / 3) + (row / 3) * 3;
 
-        return board.getRow(row).verify() &&
+        int previousValue = board.getField(col, row).getValue();
+        board.getField(col, row).setValue(num);
+
+        boolean validPlacement = board.getRow(row).verify() &&
                 board.getColumn(col).verify() &&
                 board.getBox(boxIndex).verify();
+
+        // bring back the value
+        board.getField(col, row).setValue(previousValue);
+
+        return validPlacement;
     }
 
 }
