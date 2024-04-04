@@ -3,6 +3,10 @@ package exercise.models;
 public class SudokuField {
     private int value;
 
+    public SudokuField(int value) {
+        this.value = value;
+    }
+
     public SudokuField() {
         this.value = 0;
     }

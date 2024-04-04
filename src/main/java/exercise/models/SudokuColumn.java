@@ -13,6 +13,10 @@ public class SudokuColumn implements Verifiable {
         }
     }
 
+    public SudokuColumn(SudokuField[] fields) {
+        this.fields = fields;
+    }
+
     public SudokuField[] getFields() {
         return fields;
     }
