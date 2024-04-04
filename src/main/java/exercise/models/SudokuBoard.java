@@ -1,9 +1,12 @@
 package exercise.models;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import exercise.exceptions.InvalidSudokuException;
 import exercise.solver.SudokuSolver;
 
-public class SudokuBoard {
+public class SudokuBoard implements PropertyChangeListener {
     public static final int BOARD_SIZE = 9;
     public static final int BOX_SIZE = 3;
 
@@ -48,6 +51,8 @@ public class SudokuBoard {
                 }
             }
         }
+
+        this.subscribeToFieldPropertyChanges();
     }
 
     /**
@@ -119,4 +124,20 @@ public class SudokuBoard {
         }
     }
 
+    private void subscribeToFieldPropertyChanges() {
+        for (SudokuRow row : rows) {
+            for (SudokuField field : row.getFields()) {
+                field.addPropertyChangeListener(this);
+            }
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!(evt.getSource() instanceof SudokuField) || !evt.getPropertyName().equals("value-changed")) {
+            return;
+        }
+
+        isValidSudoku();
+    }
 }
