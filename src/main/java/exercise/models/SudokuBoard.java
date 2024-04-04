@@ -26,14 +26,24 @@ public class SudokuBoard {
             boxes[i] = new SudokuBox();
         }
 
-        for (int boxRow = 0; boxRow < SudokuBoard.BOX_SIZE; boxRow++) {
-            for (int boxCol = 0; boxCol < SudokuBoard.BOX_SIZE; boxCol++) {
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        int rowIndex = boxRow * 3 + i;
-                        int colIndex = boxCol * 3 + j;
+        // Initialize columns based on the fields in rows
+        for (int col = 0; col < BOARD_SIZE; col++) {
+            SudokuField[] columnFields = new SudokuField[BOARD_SIZE];
+            for (int row = 0; row < BOARD_SIZE; row++) {
+                columnFields[row] = rows[row].getFields()[col];
+            }
+            columns[col] = new SudokuColumn(columnFields);
+        }
+
+        // Initialize boxes based on the fields in rows
+        for (int boxRow = 0; boxRow < BOX_SIZE; boxRow++) {
+            for (int boxCol = 0; boxCol < BOX_SIZE; boxCol++) {
+                for (int i = 0; i < BOX_SIZE; i++) {
+                    for (int j = 0; j < BOX_SIZE; j++) {
+                        int rowIndex = boxRow * BOX_SIZE + i;
+                        int colIndex = boxCol * BOX_SIZE + j;
                         SudokuField field = rows[rowIndex].getFields()[colIndex];
-                        boxes[boxRow * 3 + boxCol].getFields()[i * 3 + j] = field;
+                        boxes[boxRow * BOX_SIZE + boxCol].getFields()[i * BOX_SIZE + j] = field;
                     }
                 }
             }
