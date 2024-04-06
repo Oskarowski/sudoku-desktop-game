@@ -3,7 +3,9 @@ package exercise.solver;
 import exercise.exceptions.InvalidSudokuException;
 import exercise.models.SudokuBoard;
 
-import java.util.Random;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
 
 public class BacktrackingSudokuSolver implements SudokuSolver {
     final int sudokuBoardSize = SudokuBoard.BOARD_SIZE;
@@ -20,8 +22,12 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         }
     }
 
-    private int[] generateRandomNumbers() {
-        int[] nums = new int[sudokuBoardSize];
+    private List<Integer> generateRandomNumbers() {
+        List<Integer> nums = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
+        Collections.shuffle(nums);
+        return nums;
+
+        /* int[] nums = new int[sudokuBoardSize];
         for (int i = 0; i < sudokuBoardSize; i++) {
             nums[i] = i + 1;
         }
@@ -34,7 +40,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
             nums[i] = nums[j];
             nums[j] = temp;
         }
-        return nums;
+        return nums; */
     }
 
     private boolean fillBoardRecursive(int row, int col, SudokuBoard board) {
@@ -52,7 +58,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
             return fillBoardRecursive(row + 1, col, board);
         }
 
-        int[] randomNumbers = generateRandomNumbers();
+        List<Integer> randomNumbers = generateRandomNumbers();
         for (int num : randomNumbers) {
             if (isValidPlacement(row, col, num, board)) {
                 board.getField(col, row).setValue(num);
