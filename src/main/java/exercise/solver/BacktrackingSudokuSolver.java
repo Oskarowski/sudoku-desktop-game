@@ -3,9 +3,9 @@ package exercise.solver;
 import exercise.exceptions.InvalidSudokuException;
 import exercise.models.SudokuBoard;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 
 public class BacktrackingSudokuSolver implements SudokuSolver {
     final int sudokuBoardSize = SudokuBoard.BOARD_SIZE;

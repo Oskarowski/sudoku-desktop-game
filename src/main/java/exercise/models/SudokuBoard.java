@@ -7,6 +7,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+
 public class SudokuBoard implements PropertyChangeListener {
     public static final int BOARD_SIZE = 9;
     public static final int BOX_SIZE = 3;
