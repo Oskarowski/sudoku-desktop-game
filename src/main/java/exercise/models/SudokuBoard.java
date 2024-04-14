@@ -2,6 +2,9 @@ package exercise.models;
 
 import exercise.exceptions.InvalidSudokuException;
 import exercise.solver.SudokuSolver;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -152,4 +155,28 @@ public class SudokuBoard implements PropertyChangeListener {
 
         isValidSudoku();
     }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+            .append("rows", rows)
+            .toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        SudokuBoard other = (SudokuBoard) obj;
+        return new EqualsBuilder()
+            .append(rows, other.rows)
+            .append(columns, other.columns)
+            .append(boxes, other.boxes)
+            .isEquals();
+    }
+
 }

@@ -1,5 +1,7 @@
 package exercise.models;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -41,5 +43,29 @@ public class SudokuField {
         for (PropertyChangeListener listener : listeners) {
             listener.propertyChange(new PropertyChangeEvent(this, propertyName, oldVal, newVal));
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        SudokuField other = (SudokuField) obj;
+        return value == other.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(value)
+            .toHashCode();
     }
 }
