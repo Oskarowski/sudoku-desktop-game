@@ -42,7 +42,6 @@ public class SudokuBoard implements PropertyChangeListener {
             for (int row = 0; row < BOARD_SIZE; row++) {
                 columnFields[row] = rows.get(row).getFields()[col];
             }
-            //columns[col] = new SudokuColumn(columnFields);
             columns.add(col, new SudokuColumn(columnFields));
         }
 
@@ -54,7 +53,6 @@ public class SudokuBoard implements PropertyChangeListener {
                         int rowIndex = boxRow * BOX_SIZE + i;
                         int colIndex = boxCol * BOX_SIZE + j;
                         SudokuField field = rows.get(rowIndex).getFields()[colIndex];
-                        //boxes[boxRow * BOX_SIZE + boxCol].getFields()[i * BOX_SIZE + j] = field;
                         boxes.get(boxRow * BOX_SIZE + boxCol).getFields()[i * BOX_SIZE + j] = field;
                     }
                 }

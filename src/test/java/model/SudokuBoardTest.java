@@ -205,8 +205,28 @@ public class SudokuBoardTest {
 
     @Test
     void testEquals() {
+        SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+        assertTrue(sudokuBoard.equals(sudokuBoard));
+    }
+
+    @Test
+    void testEquals_NullObject() {
+        SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+        assertFalse(sudokuBoard.equals(null));
+    }
+
+    @Test
+    void testEquals_DifferentClass() {
+        SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+        assertFalse(sudokuBoard.equals(new Object()));
+    }
+
+    @Test
+    void testEquals_DifferentFields() throws InvalidSudokuException {
         SudokuBoard sudokuBoard1 = new SudokuBoard(new BacktrackingSudokuSolver());
         SudokuBoard sudokuBoard2 = new SudokuBoard(new BacktrackingSudokuSolver());
+        sudokuBoard1.solveGame();
+        sudokuBoard2.solveGame();
         assertFalse(sudokuBoard1.equals(sudokuBoard2));
     }
 

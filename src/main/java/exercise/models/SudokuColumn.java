@@ -1,12 +1,10 @@
 package exercise.models;
 
-import exercise.helpers.UniqueChecker;
-import exercise.interfaces.Verifiable;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import exercise.interfaces.SudokuBaseContainer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class SudokuColumn implements Verifiable {
+public class SudokuColumn extends SudokuBaseContainer{
     private SudokuField[] fields;
 
     public SudokuColumn() {
@@ -18,15 +16,6 @@ public class SudokuColumn implements Verifiable {
 
     public SudokuColumn(SudokuField[] fields) {
         this.fields = fields;
-    }
-
-    public SudokuField[] getFields() {
-        return fields;
-    }
-
-    @Override
-    public boolean verify() {
-        return UniqueChecker.checkUnique(fields);
     }
 
     @Override
@@ -45,13 +34,11 @@ public class SudokuColumn implements Verifiable {
             return false;
         }
         SudokuColumn other = (SudokuColumn) obj;
-        return fields.equals(other.fields);
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(fields)
-            .toHashCode();
+        for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
+            if (getFields()[i].getValue() != other.getFields()[i].getValue()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
