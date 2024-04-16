@@ -3,7 +3,7 @@ package exercise.models;
 import exercise.interfaces.SudokuBaseContainer;
 import org.apache.commons.lang3.StringUtils;
 
-public class SudokuBox extends SudokuBaseContainer{
+public class SudokuBox extends SudokuBaseContainer {
     private SudokuField[] fields;
 
     public SudokuBox() {

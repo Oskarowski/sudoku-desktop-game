@@ -4,7 +4,7 @@ import exercise.interfaces.SudokuBaseContainer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class SudokuColumn extends SudokuBaseContainer{
+public class SudokuColumn extends SudokuBaseContainer {
     private SudokuField[] fields;
 
     public SudokuColumn() {
