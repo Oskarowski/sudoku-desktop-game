@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import exercise.models.SudokuColumn;
 import exercise.models.SudokuField;
 import exercise.models.SudokuRow;
 
@@ -76,9 +75,6 @@ public class SudokuRowTest {
         SudokuRow row2 = new SudokuRow();
         row1.getFields()[5].setValue(2);
         row2.getFields()[5].setValue(1);
-
-        System.out.println(row1.getFields()[5].getValue());
-        System.out.println(row2.getFields()[5].getValue());
 
         assertFalse(row1.equals(row2));
     }

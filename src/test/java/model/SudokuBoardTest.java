@@ -187,14 +187,14 @@ public class SudokuBoardTest {
         };
     }
 
-    private static void printBoard(SudokuBoard board) {
-        for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
-            for (int j = 0; j < SudokuBoard.BOARD_SIZE; j++) {
-                System.out.print(board.getField(j, i).getValue() + " ");
-            }
-            System.out.println();
-        }
-    }
+    // private static void printBoard(SudokuBoard board) {
+    //     for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
+    //         for (int j = 0; j < SudokuBoard.BOARD_SIZE; j++) {
+    //             System.out.print(board.getField(j, i).getValue() + " ");
+    //         }
+    //         System.out.println();
+    //     }
+    // }
 
     @Test
     void testToString() {
