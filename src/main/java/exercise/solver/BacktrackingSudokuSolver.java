@@ -26,21 +26,6 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         List<Integer> nums = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
         Collections.shuffle(nums);
         return nums;
-
-        /* int[] nums = new int[sudokuBoardSize];
-        for (int i = 0; i < sudokuBoardSize; i++) {
-            nums[i] = i + 1;
-        }
-
-        Random random = new Random();
-        // shuffle the array
-        for (int i = sudokuBoardSize - 1; i > 0; i--) {
-            int j = random.nextInt(i + 1);
-            int temp = nums[i];
-            nums[i] = nums[j];
-            nums[j] = temp;
-        }
-        return nums; */
     }
 
     private boolean fillBoardRecursive(int row, int col, SudokuBoard board) {

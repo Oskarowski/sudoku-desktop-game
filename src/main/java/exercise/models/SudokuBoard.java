@@ -3,6 +3,7 @@ package exercise.models;
 import exercise.exceptions.InvalidSudokuException;
 import exercise.solver.SudokuSolver;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -19,9 +20,6 @@ public class SudokuBoard implements PropertyChangeListener {
     List<SudokuRow> rows;
     List<SudokuColumn> columns;
     List<SudokuBox> boxes;
-    //private SudokuRow[] rows;
-    //private SudokuColumn[] columns;
-    //private SudokuBox[] boxes;
 
     public SudokuBoard(SudokuSolver solver) {
         // assign the way solver of sudoku
@@ -35,8 +33,6 @@ public class SudokuBoard implements PropertyChangeListener {
             rows.add(new SudokuRow());
             columns.add(new SudokuColumn());
             boxes.add(new SudokuBox());
-            //columns[i] = new SudokuColumn();
-            //boxes[i] = new SudokuBox();
         }
 
         // Initialize columns based on the fields in rows
@@ -44,8 +40,6 @@ public class SudokuBoard implements PropertyChangeListener {
             SudokuField[] columnFields = new SudokuField[BOARD_SIZE];
             //ArrayList<SudokuField> columnFields = new ArrayList<>(BOARD_SIZE);
             for (int row = 0; row < BOARD_SIZE; row++) {
-                //columnFields.add(rows.get(row).getFields()[col]);
-                //columnFields[row] = rows[row].getFields()[col];
                 columnFields[row] = rows.get(row).getFields()[col];
             }
             //columns[col] = new SudokuColumn(columnFields);
@@ -179,4 +173,12 @@ public class SudokuBoard implements PropertyChangeListener {
             .isEquals();
     }
 
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+            .append(rows)
+            .append(columns)
+            .append(boxes)
+            .toHashCode();
+    }
 }

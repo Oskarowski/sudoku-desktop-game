@@ -195,4 +195,24 @@ public class SudokuBoardTest {
             System.out.println();
         }
     }
+
+    @Test
+    void testToString() {
+        SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+        System.out.println(sudokuBoard.toString());
+        assertNotNull(sudokuBoard.toString());
+    }
+
+    @Test
+    void testEquals() {
+        SudokuBoard sudokuBoard1 = new SudokuBoard(new BacktrackingSudokuSolver());
+        SudokuBoard sudokuBoard2 = new SudokuBoard(new BacktrackingSudokuSolver());
+        assertFalse(sudokuBoard1.equals(sudokuBoard2));
+    }
+
+    @Test
+    void testHashCode() {
+        SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+        assertNotNull(sudokuBoard.hashCode());
+    }
 }
