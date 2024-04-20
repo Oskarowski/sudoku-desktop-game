@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SudokuBoard implements PropertyChangeListener {
@@ -17,6 +18,10 @@ public class SudokuBoard implements PropertyChangeListener {
     public static final int BOX_SIZE = 3;
 
     private SudokuSolver solver;
+    SudokuRow[] rowsArray = new SudokuRow[BOARD_SIZE];
+    SudokuColumn[] columnsArray = new SudokuColumn[BOARD_SIZE];
+    SudokuBox[] boxesArray = new SudokuBox[BOARD_SIZE];
+
     List<SudokuRow> rows;
     List<SudokuColumn> columns;
     List<SudokuBox> boxes;
@@ -25,14 +30,14 @@ public class SudokuBoard implements PropertyChangeListener {
         // assign the way solver of sudoku
         this.solver = solver;
 
-        this.rows = new ArrayList<>(BOARD_SIZE);
-        this.columns = new ArrayList<>(BOARD_SIZE);
-        this.boxes = new ArrayList<>(BOARD_SIZE);
+        this.rows = new ArrayList<>(Arrays.asList(rowsArray));
+        this.columns = new ArrayList<>(Arrays.asList(columnsArray));
+        this.boxes = new ArrayList<>(Arrays.asList(boxesArray));
 
         for (int i = 0; i < BOARD_SIZE; i++) {
-            rows.add(new SudokuRow());
-            columns.add(new SudokuColumn());
-            boxes.add(new SudokuBox());
+            rows.set(i, new SudokuRow());
+            columns.set(i, new SudokuColumn());
+            boxes.set(i, new SudokuBox());
         }
 
         // Initialize columns based on the fields in rows
@@ -42,7 +47,7 @@ public class SudokuBoard implements PropertyChangeListener {
             for (int row = 0; row < BOARD_SIZE; row++) {
                 columnFields[row] = rows.get(row).getFields()[col];
             }
-            columns.add(col, new SudokuColumn(columnFields));
+            columns.set(col, new SudokuColumn(columnFields));
         }
 
         // Initialize boxes based on the fields in rows

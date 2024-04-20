@@ -1,7 +1,6 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +42,7 @@ public class SudokuRowTest {
         SudokuRow row = new SudokuRow();
 
         assertTrue(row.equals(row));
+        assertEquals(row.hashCode(), row.hashCode());
     }
 
     @Test
@@ -67,6 +67,7 @@ public class SudokuRowTest {
         row2.getFields()[0].setValue(1);
 
         assertTrue(row1.equals(row2));
+        assertEquals(row1.hashCode(), row2.hashCode());
     }
 
     @Test
@@ -77,6 +78,7 @@ public class SudokuRowTest {
         row2.getFields()[5].setValue(1);
 
         assertFalse(row1.equals(row2));
+        assertNotEquals(row1.hashCode(), row2.hashCode());
     }
 
     @Test

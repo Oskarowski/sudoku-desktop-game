@@ -199,14 +199,14 @@ public class SudokuBoardTest {
     @Test
     void testToString() {
         SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
-        System.out.println(sudokuBoard.toString());
         assertNotNull(sudokuBoard.toString());
     }
 
     @Test
-    void testEquals() {
+    void testEquals_SameObject() {
         SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
         assertTrue(sudokuBoard.equals(sudokuBoard));
+        assertEquals(sudokuBoard.hashCode(), sudokuBoard.hashCode());
     }
 
     @Test
@@ -228,6 +228,7 @@ public class SudokuBoardTest {
         sudokuBoard1.solveGame();
         sudokuBoard2.solveGame();
         assertFalse(sudokuBoard1.equals(sudokuBoard2));
+        assertNotEquals(sudokuBoard1.hashCode(), sudokuBoard2.hashCode());
     }
 
     @Test
