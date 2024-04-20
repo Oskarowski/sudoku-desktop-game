@@ -1,6 +1,8 @@
 package exercise.models;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -47,7 +49,9 @@ public class SudokuField {
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
+            .append("value", value) // Assuming 'value' is your field value
+            .toString();
     }
 
     @Override

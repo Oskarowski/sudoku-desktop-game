@@ -42,12 +42,9 @@ public class SudokuBoard implements PropertyChangeListener {
 
         // Initialize columns based on the fields in rows
         for (int col = 0; col < BOARD_SIZE; col++) {
-            SudokuField[] columnFields = new SudokuField[BOARD_SIZE];
-            //ArrayList<SudokuField> columnFields = new ArrayList<>(BOARD_SIZE);
             for (int row = 0; row < BOARD_SIZE; row++) {
-                columnFields[row] = rows.get(row).getFields()[col];
+                columns.get(col).getFields()[row] = rows.get(row).getFields()[col];
             }
-            columns.set(col, new SudokuColumn(columnFields));
         }
 
         // Initialize boxes based on the fields in rows
@@ -155,8 +152,8 @@ public class SudokuBoard implements PropertyChangeListener {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-            .append("rows", rows)
+        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
+            .append("rows", rows.toString())
             .toString();
     }
 

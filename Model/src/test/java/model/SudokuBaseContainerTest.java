@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import exercise.models.SudokuField;
 import exercise.models.SudokuRow;
 
-public class SudokuRowTest {
+public class SudokuBaseContainerTest {
     @Test
     void testVerify_AllUnique() {
         SudokuRow row = new SudokuRow();
@@ -101,7 +101,7 @@ public class SudokuRowTest {
     @Test
     void testToString() {
         SudokuRow row = new SudokuRow();
-
-        assertTrue(row.toString().contains("fields"));
+        // System.out.println(row.toString());
+        assertTrue(row.toString().contains("{0,0,0,0,0,0,0,0,0}"));
     }
 }

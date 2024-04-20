@@ -18,6 +18,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>Model</module>
+        <module>Dao</module>
     </modules>
 
     <properties>
@@ -41,7 +42,6 @@
     </developers>
 
     <description>Project of laboratory group mkw_wt_1400_08</description>
-
 
     <dependencies>
         <dependency>
