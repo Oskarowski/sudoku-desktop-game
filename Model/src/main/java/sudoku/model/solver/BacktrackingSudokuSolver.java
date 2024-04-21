@@ -1,11 +1,11 @@
 package sudoku.model.solver;
 
+import sudoku.model.exceptions.InvalidSudokuException;
+import sudoku.model.models.SudokuBoard;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import sudoku.model.exceptions.InvalidSudokuException;
-import sudoku.model.models.SudokuBoard;
 
 public class BacktrackingSudokuSolver implements SudokuSolver {
     final int sudokuBoardSize = SudokuBoard.BOARD_SIZE;

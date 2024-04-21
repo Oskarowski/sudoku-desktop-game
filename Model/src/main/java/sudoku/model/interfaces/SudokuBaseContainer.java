@@ -1,14 +1,12 @@
 package sudoku.model.interfaces;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import sudoku.model.helpers.UniqueChecker;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
+
+import java.io.Serializable;
 
 public class SudokuBaseContainer implements Verifiable, Serializable {
     private SudokuField[] fields;

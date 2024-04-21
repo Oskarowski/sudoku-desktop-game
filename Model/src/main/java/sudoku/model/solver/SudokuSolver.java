@@ -1,9 +1,9 @@
 package sudoku.model.solver;
 
-import java.io.Serializable;
-
 import sudoku.model.exceptions.InvalidSudokuException;
 import sudoku.model.models.SudokuBoard;
+
+import java.io.Serializable;
 
 public interface SudokuSolver extends Serializable {
 

@@ -1,5 +1,8 @@
 package sudoku.dao.models;
 
+import sudoku.dao.interfaces.Dao;
+import sudoku.model.models.SudokuBoard;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,9 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import sudoku.dao.interfaces.Dao;
-import sudoku.model.models.SudokuBoard;
 
 public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     private String directoryPath;
