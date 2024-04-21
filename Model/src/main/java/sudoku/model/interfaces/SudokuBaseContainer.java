@@ -1,5 +1,7 @@
 package sudoku.model.interfaces;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -8,7 +10,7 @@ import sudoku.model.helpers.UniqueChecker;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
 
-public class SudokuBaseContainer implements Verifiable {
+public class SudokuBaseContainer implements Verifiable, Serializable {
     private SudokuField[] fields;
 
     public SudokuBaseContainer() {
@@ -29,7 +31,7 @@ public class SudokuBaseContainer implements Verifiable {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
+        return new ToStringBuilder(this)
             .append("fields", fields)
             .toString();
     }

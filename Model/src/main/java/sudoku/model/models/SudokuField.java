@@ -6,10 +6,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SudokuField {
+public class SudokuField implements Serializable {
     private int value;
     private List<PropertyChangeListener> listeners;
 
@@ -68,7 +69,7 @@ public class SudokuField {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder(17,37)
             .append(value)
             .toHashCode();
     }

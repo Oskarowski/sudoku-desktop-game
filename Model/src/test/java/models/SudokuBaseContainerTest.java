@@ -101,7 +101,6 @@ public class SudokuBaseContainerTest {
     @Test
     void testToString() {
         SudokuRow row = new SudokuRow();
-        // System.out.println(row.toString());
         assertTrue(row.toString().contains("{0,0,0,0,0,0,0,0,0}"));
     }
 }

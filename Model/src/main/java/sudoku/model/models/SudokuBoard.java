@@ -10,11 +10,12 @@ import sudoku.model.solver.SudokuSolver;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SudokuBoard implements PropertyChangeListener {
+public class SudokuBoard implements PropertyChangeListener, Serializable {
     public static final int BOARD_SIZE = 9;
     public static final int BOX_SIZE = 3;
 
@@ -153,7 +154,7 @@ public class SudokuBoard implements PropertyChangeListener {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
+        return new ToStringBuilder(this)
             .append("rows", rows.toString())
             .toString();
     }
