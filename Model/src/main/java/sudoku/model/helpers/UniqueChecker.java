@@ -1,9 +1,9 @@
-package exercise.helpers;
-
-import exercise.models.SudokuField;
+package sudoku.model.helpers;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import sudoku.model.models.SudokuField;
 
 public class UniqueChecker {
     public static boolean checkUnique(SudokuField[] fields) {

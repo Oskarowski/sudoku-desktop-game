@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import exercise.helpers.UniqueChecker;
-import exercise.models.SudokuField;
+import sudoku.model.helpers.UniqueChecker;
+import sudoku.model.models.SudokuField;
 
 public class UniqueCheckerTest {
     @Test

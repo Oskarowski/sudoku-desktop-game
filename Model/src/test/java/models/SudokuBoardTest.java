@@ -1,4 +1,4 @@
-package model;
+package models;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -6,10 +6,10 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import exercise.exceptions.InvalidSudokuException;
-import exercise.models.SudokuBoard;
-import exercise.models.SudokuField;
-import exercise.solver.BacktrackingSudokuSolver;
+import sudoku.model.exceptions.InvalidSudokuException;
+import sudoku.model.models.SudokuBoard;
+import sudoku.model.models.SudokuField;
+import sudoku.model.solver.BacktrackingSudokuSolver;
 
 public class SudokuBoardTest {
 
@@ -187,22 +187,20 @@ public class SudokuBoardTest {
         };
     }
 
-    private static void printBoard(SudokuBoard board) {
-        for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
-            for (int j = 0; j < SudokuBoard.BOARD_SIZE; j++) {
-                System.out.print(board.getField(j, i).getValue() + " ");
-            }
-            System.out.println();
-        }
-    }
+    // private static void printBoard(SudokuBoard board) {
+    //     for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
+    //         for (int j = 0; j < SudokuBoard.BOARD_SIZE; j++) {
+    //             System.out.print(board.getField(j, i).getValue() + " ");
+    //         }
+    //         System.out.println();
+    //     }
+    // }
 
     @Test
     void testToString() throws InvalidSudokuException {
         SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
         sudokuBoard.solveGame();
         sudokuBoard.isValidSudoku();
-        System.out.println(sudokuBoard.toString());
-        printBoard(sudokuBoard);
         assertNotNull(sudokuBoard.toString());
     }
 

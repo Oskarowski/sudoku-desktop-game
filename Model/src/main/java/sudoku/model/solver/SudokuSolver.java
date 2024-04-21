@@ -1,7 +1,7 @@
-package exercise.solver;
+package sudoku.model.solver;
 
-import exercise.exceptions.InvalidSudokuException;
-import exercise.models.SudokuBoard;
+import sudoku.model.exceptions.InvalidSudokuException;
+import sudoku.model.models.SudokuBoard;
 
 public interface SudokuSolver {
 

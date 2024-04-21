@@ -1,4 +1,4 @@
-package exercise.models;
+package sudoku.model.models;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

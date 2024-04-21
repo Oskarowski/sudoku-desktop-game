@@ -1,11 +1,12 @@
-package exercise.interfaces;
+package sudoku.model.interfaces;
 
-import exercise.helpers.UniqueChecker;
-import exercise.models.SudokuBoard;
-import exercise.models.SudokuField;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import sudoku.model.helpers.UniqueChecker;
+import sudoku.model.models.SudokuBoard;
+import sudoku.model.models.SudokuField;
 
 public class SudokuBaseContainer implements Verifiable {
     private SudokuField[] fields;

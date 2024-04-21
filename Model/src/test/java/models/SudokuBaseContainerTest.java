@@ -1,11 +1,11 @@
-package model;
+package models;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import exercise.models.SudokuField;
-import exercise.models.SudokuRow;
+import sudoku.model.models.SudokuField;
+import sudoku.model.models.SudokuRow;
 
 public class SudokuBaseContainerTest {
     @Test

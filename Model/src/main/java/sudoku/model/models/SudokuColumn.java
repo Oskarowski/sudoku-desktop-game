@@ -1,6 +1,6 @@
-package exercise.models;
+package sudoku.model.models;
 
-import exercise.interfaces.SudokuBaseContainer;
+import sudoku.model.interfaces.SudokuBaseContainer;
 
 public class SudokuColumn extends SudokuBaseContainer {
     private SudokuField[] fields;

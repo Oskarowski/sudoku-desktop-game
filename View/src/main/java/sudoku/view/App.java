@@ -1,4 +1,4 @@
-package exercise.gui;
+package sudoku.view;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +11,7 @@ import java.io.IOException;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("./resources/primary.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sudoku/view/primary.fxml"));
         Scene scene = new Scene(root, 640, 480);
         stage.setScene(scene);
         stage.setTitle("Hello World");
