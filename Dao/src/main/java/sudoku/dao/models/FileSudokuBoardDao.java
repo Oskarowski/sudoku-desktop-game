@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
 
     @Override
     public SudokuBoard read(String name)  {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(directoryPath + "/" + name))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Paths.get(directoryPath, name).toString()))) {
             return (SudokuBoard) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -32,7 +33,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     
     @Override
     public void write(String name, SudokuBoard obj) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(directoryPath + "/" + name))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Paths.get(directoryPath, name).toString()))) {
             oos.writeObject(obj);
         } catch (IOException e) {
             e.printStackTrace();
