@@ -21,8 +21,9 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     }
 
     @Override
-    public SudokuBoard read(String name)  {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Paths.get(directoryPath, name).toString()))) {
+    public SudokuBoard read(String name) {
+        try (ObjectInputStream ois = new ObjectInputStream(
+                new FileInputStream(Paths.get(directoryPath, name).toString()))) {
             return (SudokuBoard) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -30,10 +31,10 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
         }
     }
 
-    
     @Override
     public void write(String name, SudokuBoard obj) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Paths.get(directoryPath, name).toString()))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(
+                new FileOutputStream(Paths.get(directoryPath, name).toString()))) {
             oos.writeObject(obj);
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,7 +55,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
                 }
             }
         }
-        
+
         return fileNames;
     }
 
