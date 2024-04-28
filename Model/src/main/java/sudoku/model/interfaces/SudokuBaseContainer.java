@@ -8,7 +8,7 @@ import sudoku.model.models.SudokuField;
 
 import java.io.Serializable;
 
-public class SudokuBaseContainer implements Verifiable, Serializable {
+public class SudokuBaseContainer implements Verifiable, Serializable, Cloneable {
     private SudokuField[] fields;
 
     public SudokuBaseContainer() {
@@ -56,5 +56,16 @@ public class SudokuBaseContainer implements Verifiable, Serializable {
             }
         }
         return true;
+    }
+
+    @Override
+    public SudokuBaseContainer clone() throws CloneNotSupportedException {
+        SudokuBaseContainer clone = (SudokuBaseContainer) super.clone();
+        for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
+            clone.getFields()[i] = getFields()[i].clone();
+        }
+        return clone;
+        // deep clone of SudokuBaseContainer using super.clone()
+        // when using the clone method, cast the result to prefered implementation
     }
 }

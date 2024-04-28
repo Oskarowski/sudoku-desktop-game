@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SudokuBoard implements PropertyChangeListener, Serializable {
+public class SudokuBoard implements PropertyChangeListener, Serializable, Cloneable {
     public static final int BOARD_SIZE = 9;
     public static final int BOX_SIZE = 3;
 
@@ -181,4 +181,16 @@ public class SudokuBoard implements PropertyChangeListener, Serializable {
             .append(boxes)
             .toHashCode();
     }
+
+    @Override
+    public SudokuBoard clone() throws CloneNotSupportedException {
+        SudokuBoard clone = (SudokuBoard) super.clone();
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            clone.rows.set(i, (SudokuRow) rows.get(i).clone());
+            clone.columns.set(i, (SudokuColumn) columns.get(i).clone());
+            clone.boxes.set(i, (SudokuBox) boxes.get(i).clone());
+        }
+        return clone;
+        // deep clone of SudokuBoard using super.clone()
+    }    
 }

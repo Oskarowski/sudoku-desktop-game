@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SudokuField implements Serializable {
+public class SudokuField implements Serializable, Cloneable, Comparable<SudokuField> {
     private int value;
     private List<PropertyChangeListener> listeners;
 
@@ -72,5 +72,20 @@ public class SudokuField implements Serializable {
         return new HashCodeBuilder(17,37)
             .append(value)
             .toHashCode();
+    }
+
+    @Override
+    public SudokuField clone() {
+        return new SudokuField(value);
+        // shallow clone of the field
+    }
+
+    @Override
+    public int compareTo(SudokuField o) throws NullPointerException {
+        if (o == null) {
+            throw new NullPointerException("Argument cannot be null");
+        }
+        return Integer.compare(value, o.value);
+        // compare the values of the fields
     }
 }

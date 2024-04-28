@@ -238,4 +238,12 @@ public class SudokuBoardTest {
         SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
         assertNotNull(sudokuBoard.hashCode());
     }
+
+    @Test
+    void testClone() throws CloneNotSupportedException {
+        SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+        SudokuBoard clonedBoard = sudokuBoard.clone();
+        assertTrue(sudokuBoard.equals(clonedBoard));
+        assertEquals(sudokuBoard.hashCode(), clonedBoard.hashCode());
+    }
 }

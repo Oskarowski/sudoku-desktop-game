@@ -60,11 +60,9 @@ public class SudokuBaseContainerTest {
     }
 
     @Test
-    void testEquals_SameFields() {
+    void testEquals_SameFields() throws CloneNotSupportedException {
         SudokuRow row1 = new SudokuRow();
-        SudokuRow row2 = new SudokuRow();
-        row1.getFields()[0].setValue(1);
-        row2.getFields()[0].setValue(1);
+        SudokuRow row2 = (SudokuRow) row1.clone();
 
         assertTrue(row1.equals(row2));
         assertEquals(row1.hashCode(), row2.hashCode());
@@ -90,9 +88,9 @@ public class SudokuBaseContainerTest {
     }
 
     @Test
-    void testHashCode_DifferentFields() {
+    void testHashCode_DifferentFields() throws CloneNotSupportedException {
         SudokuRow row1 = new SudokuRow();
-        SudokuRow row2 = new SudokuRow();
+        SudokuRow row2 = (SudokuRow) row1.clone();
         row2.getFields()[0].setValue(1);
 
         assertFalse(row1.hashCode() == row2.hashCode());
@@ -102,5 +100,14 @@ public class SudokuBaseContainerTest {
     void testToString() {
         SudokuRow row = new SudokuRow();
         assertTrue(row.toString().contains("{0,0,0,0,0,0,0,0,0}"));
+    }
+
+    @Test
+    void testClone() throws CloneNotSupportedException {
+        SudokuRow row = new SudokuRow();
+        SudokuRow clone = (SudokuRow) row.clone();
+
+        assertTrue(row.equals(clone));
+        assertEquals(row.hashCode(), clone.hashCode());
     }
 }
