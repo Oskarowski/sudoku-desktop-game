@@ -240,10 +240,21 @@ public class SudokuBoardTest {
     }
 
     @Test
-    void testClone() throws CloneNotSupportedException {
+    void testClone_same() throws CloneNotSupportedException {
         SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
         SudokuBoard clonedBoard = sudokuBoard.clone();
         assertTrue(sudokuBoard.equals(clonedBoard));
         assertEquals(sudokuBoard.hashCode(), clonedBoard.hashCode());
+    }
+
+    @Test
+    void testClone_different() throws CloneNotSupportedException {
+        SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+        SudokuBoard clonedBoard = sudokuBoard.clone();
+
+        clonedBoard.setField(0, 0, 1);
+
+        assertFalse(sudokuBoard.equals(clonedBoard));
+        assertNotEquals(sudokuBoard.hashCode(), clonedBoard.hashCode());
     }
 }

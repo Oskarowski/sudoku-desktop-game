@@ -185,6 +185,10 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
     @Override
     public SudokuBoard clone() throws CloneNotSupportedException {
         SudokuBoard clone = (SudokuBoard) super.clone();
+        clone.rows = new ArrayList<>(Arrays.asList(rowsArray));
+        clone.columns = new ArrayList<>(Arrays.asList(columnsArray));
+        clone.boxes = new ArrayList<>(Arrays.asList(boxesArray));
+        
         for (int i = 0; i < BOARD_SIZE; i++) {
             clone.rows.set(i, (SudokuRow) rows.get(i).clone());
             clone.columns.set(i, (SudokuColumn) columns.get(i).clone());

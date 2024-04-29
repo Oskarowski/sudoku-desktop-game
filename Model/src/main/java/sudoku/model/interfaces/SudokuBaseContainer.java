@@ -61,8 +61,10 @@ public class SudokuBaseContainer implements Verifiable, Serializable, Cloneable 
     @Override
     public SudokuBaseContainer clone() throws CloneNotSupportedException {
         SudokuBaseContainer clone = (SudokuBaseContainer) super.clone();
+        clone.fields = new SudokuField[SudokuBoard.BOARD_SIZE];
+        
         for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
-            clone.getFields()[i] = getFields()[i].clone();
+            clone.fields[i] = fields[i].clone();
         }
         return clone;
         // deep clone of SudokuBaseContainer using super.clone()

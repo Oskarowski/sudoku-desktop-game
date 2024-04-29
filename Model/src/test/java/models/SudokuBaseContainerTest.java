@@ -103,11 +103,24 @@ public class SudokuBaseContainerTest {
     }
 
     @Test
-    void testClone() throws CloneNotSupportedException {
+    void testClone_sameFields() throws CloneNotSupportedException {
         SudokuRow row = new SudokuRow();
         SudokuRow clone = (SudokuRow) row.clone();
 
+        assertNotSame(row, clone);
         assertTrue(row.equals(clone));
         assertEquals(row.hashCode(), clone.hashCode());
+    }
+
+    @Test
+    void testClone_differentFields() throws CloneNotSupportedException {
+        SudokuRow row = new SudokuRow();
+        SudokuRow clone = (SudokuRow) row.clone();
+
+        clone.getFields()[0].setValue(1);
+
+        assertNotSame(row, clone);
+        assertFalse(row.equals(clone));
+        assertNotEquals(row.hashCode(), clone.hashCode());
     }
 }
