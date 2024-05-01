@@ -12,9 +12,9 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/sudoku/view/primary.fxml"));
-        Scene scene = new Scene(root, 640, 480);
+        Scene scene = new Scene(root, 900, 600);
         stage.setScene(scene);
-        stage.setTitle("Hello World");
+        stage.setTitle("Sudoku Game");
         stage.show();
     }
 
