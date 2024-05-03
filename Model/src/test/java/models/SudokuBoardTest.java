@@ -257,4 +257,19 @@ public class SudokuBoardTest {
         assertFalse(sudokuBoard.equals(clonedBoard));
         assertNotEquals(sudokuBoard.hashCode(), clonedBoard.hashCode());
     }
+
+    @Test
+    void testGetGameBoard() throws InvalidSudokuException, CloneNotSupportedException {
+        SudokuBoard sudokuBoard = SudokuBoard.getGameBoard(0);
+        assertNotNull(sudokuBoard);
+        int emptyFields = 0;
+        for (int y = 0; y < SudokuBoard.BOARD_SIZE; y++) {
+            for (int x = 0; x < SudokuBoard.BOARD_SIZE; x++) {
+                if (sudokuBoard.getField(x, y).getValue() == 0) {
+                    emptyFields++;
+                }
+            }
+        }
+        assertEquals(20, emptyFields);
+    }
 }

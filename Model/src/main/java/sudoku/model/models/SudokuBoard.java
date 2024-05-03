@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import sudoku.model.exceptions.InvalidSudokuException;
+import sudoku.model.solver.BacktrackingSudokuSolver;
 import sudoku.model.solver.SudokuSolver;
 
 import java.beans.PropertyChangeEvent;
@@ -140,6 +141,28 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
             }
         }
     }
+    
+    /*
+     * difficulty: 0 - easy, 1 - medium, 2 - hard
+     * Set some DEFS for the difficulty levels?
+    */
+    public static SudokuBoard getGameBoard(int difficulty) throws InvalidSudokuException, CloneNotSupportedException {
+        SudokuBoard gameBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+        gameBoard.solveGame();
+
+        // remove some fields based on difficulty
+        for (int i = 0; i < (difficulty + 1) * 20; i++) {
+            int x = (int) (Math.random() * BOARD_SIZE);
+            int y = (int) (Math.random() * BOARD_SIZE);
+            if (gameBoard.getField(x, y).getValue() == 0) {
+                i--;
+                continue;    
+            }
+            gameBoard.getField(x, y).setValue(0);
+        }
+
+        return gameBoard.clone();
+    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -196,5 +219,5 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         }
         return clone;
         // deep clone of SudokuBoard using super.clone()
-    }    
+    }
 }

@@ -12,6 +12,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
+import sudoku.model.exceptions.InvalidSudokuException;
+import sudoku.model.models.SudokuBoard;
+import sudoku.model.solver.BacktrackingSudokuSolver;
 
 public class SudokuController implements Initializable{
     // Żeby odpalić to coś, trzeba wejść w ViewProject -> plugins -> javafx -> run
@@ -38,12 +41,14 @@ public class SudokuController implements Initializable{
         {0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0}
     };
+    private SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         selectableNumbersListView.getItems().addAll(selectableNumbers);
 
+        // change the number size etc
         selectableNumbersListView.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
             @Override
             public ListCell<Integer> call(ListView<Integer> param) {
@@ -71,6 +76,7 @@ public class SudokuController implements Initializable{
             }
         });
 
+        // add listeners for the numbers
         selectableNumbersListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
@@ -84,6 +90,7 @@ public class SudokuController implements Initializable{
             }
         });
 
+        // add labels to the grid
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 Label label = new Label(Integer.toString(sudokuArray[i][j]));
@@ -102,7 +109,45 @@ public class SudokuController implements Initializable{
         Platform.exit();
     }
 
-    @SuppressWarnings("unused")
+    @FXML
+    private void handleEasyGame() throws CloneNotSupportedException {
+        try {
+            board = SudokuBoard.getGameBoard(0);
+            updateGridWithBoard();
+        } catch (InvalidSudokuException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleMediumGame() throws CloneNotSupportedException {
+        try {
+            board = SudokuBoard.getGameBoard(1);
+            updateGridWithBoard();
+        } catch (InvalidSudokuException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleHardGame() throws CloneNotSupportedException {
+        try {
+            board = SudokuBoard.getGameBoard(2);
+            updateGridWithBoard();
+        } catch (InvalidSudokuException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateGridWithBoard() {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                Label label = getLabelAt(i, j);
+                label.setText(Integer.toString(board.getField(i, j).getValue()));
+            }
+        }
+    }
+
     private Label getLabelAt(int row, int column) {
         for (int i = 0; i < sudokuGridPane.getChildren().size(); i++) {
             if (GridPane.getRowIndex(sudokuGridPane.getChildren().get(i)) == row
