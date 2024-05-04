@@ -260,7 +260,8 @@ public class SudokuBoardTest {
 
     @Test
     void testGetGameBoard() throws InvalidSudokuException, CloneNotSupportedException {
-        SudokuBoard sudokuBoard = SudokuBoard.getGameBoard(0);
+        SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+        sudokuBoard = sudokuBoard.getGameBoard(0);
         assertNotNull(sudokuBoard);
         int emptyFields = 0;
         for (int y = 0; y < SudokuBoard.BOARD_SIZE; y++) {

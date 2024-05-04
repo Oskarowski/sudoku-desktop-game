@@ -146,7 +146,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
      * difficulty: 0 - easy, 1 - medium, 2 - hard
      * Set some DEFS for the difficulty levels?
     */
-    public static SudokuBoard getGameBoard(int difficulty) throws InvalidSudokuException, CloneNotSupportedException {
+    public SudokuBoard getGameBoard(int difficulty) throws InvalidSudokuException, CloneNotSupportedException {
         SudokuBoard gameBoard = new SudokuBoard(new BacktrackingSudokuSolver());
         gameBoard.solveGame();
 
@@ -208,6 +208,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
     @Override
     public SudokuBoard clone() throws CloneNotSupportedException {
         SudokuBoard clone = (SudokuBoard) super.clone();
+        clone.solver = new BacktrackingSudokuSolver();
         clone.rows = new ArrayList<>(Arrays.asList(rowsArray));
         clone.columns = new ArrayList<>(Arrays.asList(columnsArray));
         clone.boxes = new ArrayList<>(Arrays.asList(boxesArray));

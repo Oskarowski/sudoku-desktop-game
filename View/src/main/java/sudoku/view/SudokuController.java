@@ -112,9 +112,9 @@ public class SudokuController implements Initializable{
     @FXML
     private void handleEasyGame() throws CloneNotSupportedException {
         try {
-            board = SudokuBoard.getGameBoard(0);
+            board = board.getGameBoard(0);
             updateGridWithBoard();
-        } catch (InvalidSudokuException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -122,7 +122,7 @@ public class SudokuController implements Initializable{
     @FXML
     private void handleMediumGame() throws CloneNotSupportedException {
         try {
-            board = SudokuBoard.getGameBoard(1);
+            board = board.getGameBoard(1);
             updateGridWithBoard();
         } catch (InvalidSudokuException e) {
             e.printStackTrace();
@@ -132,7 +132,7 @@ public class SudokuController implements Initializable{
     @FXML
     private void handleHardGame() throws CloneNotSupportedException {
         try {
-            board = SudokuBoard.getGameBoard(2);
+            board = board.getGameBoard(2);
             updateGridWithBoard();
         } catch (InvalidSudokuException e) {
             e.printStackTrace();
