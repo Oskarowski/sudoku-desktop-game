@@ -16,66 +16,104 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sudoku.view.SudokuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+   prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21"
+   xmlns:fx="http://javafx.com/fxml/1" fx:controller="sudoku.view.SudokuController">
    <children>
-      <MenuBar fx:id="sudokuMenuBar" focusTraversable="false" layoutY="1.0" AnchorPane.bottomAnchor="574.4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <menus>
+      <MenuBar fx:id="sudokuMenuBar" focusTraversable="false" layoutY="1.0"
+         AnchorPane.bottomAnchor="574.4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+         AnchorPane.topAnchor="0.0">
+         <menus>
             <Menu fx:id="newGameMenu" mnemonicParsing="false" text="New Game">
-              <items>
-                <MenuItem fx:id="easyNewGame" mnemonicParsing="false" onAction="#handleEasyGame" text="Easy" />
-                  <MenuItem fx:id="mediumNewGame" mnemonicParsing="false" onAction="#handleMediumGame" text="Medium" />
-                  <MenuItem fx:id="hardNewGame" mnemonicParsing="false" onAction="#handleHardGame" text="Hard" />
-              </items>
+               <items>
+                  <MenuItem fx:id="easyNewGame" mnemonicParsing="false" onAction="#handleEasyGame"
+                     text="Easy" />
+                  <MenuItem fx:id="mediumNewGame" mnemonicParsing="false"
+                     onAction="#handleMediumGame" text="Medium" />
+                  <MenuItem fx:id="hardNewGame" mnemonicParsing="false" onAction="#handleHardGame"
+                     text="Hard" />
+               </items>
             </Menu>
-          <Menu fx:id="exitMenu" mnemonicParsing="false" onAction="#handleExit" text="Exit">
-            <items>
-              <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExit" text="Exit" />
-            </items>
-          </Menu>
-        </menus>
+            <Menu fx:id="exitMenu" mnemonicParsing="false" onAction="#handleExit" text="Exit">
+               <items>
+                  <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExit"
+                     text="Exit" />
+               </items>
+            </Menu>
+         </menus>
       </MenuBar>
-      <SplitPane dividerPositions="0.3397150489759572" layoutX="119.0" layoutY="139.0" prefHeight="559.0" prefWidth="840.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.6">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+      <SplitPane dividerPositions="0.3397150489759572" layoutX="119.0" layoutY="139.0"
+         prefHeight="559.0" prefWidth="840.0" AnchorPane.bottomAnchor="0.0"
+         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.6">
+         <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <ListView fx:id="selectableNumbersListView" editable="true" layoutX="-64.0" layoutY="100.0" prefHeight="527.2" prefWidth="125.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="46.0" />
-                  <Label fx:id="numberLabel" alignment="CENTER" prefHeight="46.0" prefWidth="232.0" text="Current Number: none" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <ListView fx:id="selectableNumbersListView" editable="true" layoutX="-64.0"
+                     layoutY="100.0" prefHeight="527.2" prefWidth="125.6"
+                     AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="46.0" />
+                  <Label fx:id="numberLabel" alignment="CENTER" prefHeight="46.0" prefWidth="232.0"
+                     text="Current Number: none" AnchorPane.leftAnchor="0.0"
+                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <GridPane fx:id="sudokuGridPane" alignment="CENTER" focusTraversable="true" gridLinesVisible="true" hgap="1.0" layoutX="74.4" layoutY="96.8" prefHeight="572.8" prefWidth="590.4" vgap="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <columnConstraints>
-                        <ColumnConstraints fx:id="column1" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints fx:id="column2" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints fx:id="column3" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints fx:id="column4" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints fx:id="column5" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints fx:id="column6" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints fx:id="column7" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints fx:id="column8" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints fx:id="column9" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints fx:id="row1" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints fx:id="row2" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints fx:id="row3" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints fx:id="row4" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints fx:id="row5" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints fx:id="row6" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints fx:id="row7" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints fx:id="row8" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints fx:id="row9" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+                  <GridPane fx:id="sudokuGridPane" alignment="CENTER" focusTraversable="true"
+                     gridLinesVisible="true" hgap="1.0" layoutX="74.4" layoutY="96.8"
+                     prefHeight="572.8" prefWidth="590.4" vgap="1.0" AnchorPane.bottomAnchor="0.0"
+                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                     AnchorPane.topAnchor="0.0">
+                     <columnConstraints>
+                        <ColumnConstraints fx:id="column1" hgrow="SOMETIMES" minWidth="10.0"
+                           prefWidth="100.0" />
+                        <ColumnConstraints fx:id="column2" hgrow="SOMETIMES" minWidth="10.0"
+                           prefWidth="100.0" />
+                        <ColumnConstraints fx:id="column3" hgrow="SOMETIMES" minWidth="10.0"
+                           prefWidth="100.0" />
+                        <ColumnConstraints fx:id="column4" hgrow="SOMETIMES" minWidth="10.0"
+                           prefWidth="100.0" />
+                        <ColumnConstraints fx:id="column5" hgrow="SOMETIMES" minWidth="10.0"
+                           prefWidth="100.0" />
+                        <ColumnConstraints fx:id="column6" hgrow="SOMETIMES" minWidth="10.0"
+                           prefWidth="100.0" />
+                        <ColumnConstraints fx:id="column7" hgrow="SOMETIMES" minWidth="10.0"
+                           prefWidth="100.0" />
+                        <ColumnConstraints fx:id="column8" hgrow="SOMETIMES" minWidth="10.0"
+                           prefWidth="100.0" />
+                        <ColumnConstraints fx:id="column9" hgrow="SOMETIMES" minWidth="10.0"
+                           prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints fx:id="row1" minHeight="10.0" prefHeight="30.0"
+                           vgrow="SOMETIMES" />
+                        <RowConstraints fx:id="row2" minHeight="10.0" prefHeight="30.0"
+                           vgrow="SOMETIMES" />
+                        <RowConstraints fx:id="row3" minHeight="10.0" prefHeight="30.0"
+                           vgrow="SOMETIMES" />
+                        <RowConstraints fx:id="row4" minHeight="10.0" prefHeight="30.0"
+                           vgrow="SOMETIMES" />
+                        <RowConstraints fx:id="row5" minHeight="10.0" prefHeight="30.0"
+                           vgrow="SOMETIMES" />
+                        <RowConstraints fx:id="row6" minHeight="10.0" prefHeight="30.0"
+                           vgrow="SOMETIMES" />
+                        <RowConstraints fx:id="row7" minHeight="10.0" prefHeight="30.0"
+                           vgrow="SOMETIMES" />
+                        <RowConstraints fx:id="row8" minHeight="10.0" prefHeight="30.0"
+                           vgrow="SOMETIMES" />
+                        <RowConstraints fx:id="row9" minHeight="10.0" prefHeight="30.0"
+                           vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <padding>
                         <Insets bottom="3.0" left="4.0" right="3.0" top="3.0" />
                      </padding>
                   </GridPane>
-                  <Separator orientation="VERTICAL" prefHeight="573.0" prefWidth="3.0" AnchorPane.leftAnchor="195.5">
+                  <Separator orientation="VERTICAL" prefHeight="573.0" prefWidth="3.0"
+                     AnchorPane.leftAnchor="195.5">
                      <effect>
                         <DropShadow>
                            <input>
@@ -84,7 +122,8 @@
                         </DropShadow>
                      </effect>
                   </Separator>
-                  <Separator orientation="VERTICAL" prefHeight="573.0" prefWidth="3.0" AnchorPane.leftAnchor="390.4">
+                  <Separator orientation="VERTICAL" prefHeight="573.0" prefWidth="3.0"
+                     AnchorPane.leftAnchor="390.4">
                      <effect>
                         <DropShadow>
                            <input>
@@ -93,7 +132,8 @@
                         </DropShadow>
                      </effect>
                   </Separator>
-                  <Separator layoutY="190.4" prefHeight="3.0" prefWidth="590.0" AnchorPane.topAnchor="190.0">
+                  <Separator layoutY="190.4" prefHeight="3.0" prefWidth="590.0"
+                     AnchorPane.topAnchor="190.0">
                      <effect>
                         <Shadow>
                            <input>
@@ -113,7 +153,7 @@
                   </Separator>
                </children>
             </AnchorPane>
-        </items>
+         </items>
       </SplitPane>
    </children>
 </AnchorPane>

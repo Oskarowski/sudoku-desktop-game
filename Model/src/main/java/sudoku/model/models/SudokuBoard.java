@@ -105,6 +105,15 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         return boxes.get(index);
     }
 
+    /**
+     * Returns the size of the Sudoku board.
+     *
+     * @return the size of the Sudoku board
+     */
+    public int getSize() {
+        return BOARD_SIZE;
+    }
+
     public void solveGame() throws InvalidSudokuException {
         solver.solve(this);
     }
@@ -140,28 +149,6 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
                 field.addPropertyChangeListener(this);
             }
         }
-    }
-    
-    /*
-     * difficulty: 0 - easy, 1 - medium, 2 - hard
-     * Set some DEFS for the difficulty levels?
-    */
-    public SudokuBoard getGameBoard(int difficulty) throws InvalidSudokuException, CloneNotSupportedException {
-        SudokuBoard gameBoard = new SudokuBoard(new BacktrackingSudokuSolver());
-        gameBoard.solveGame();
-
-        // remove some fields based on difficulty
-        for (int i = 0; i < (difficulty + 1) * 20; i++) {
-            int x = (int) (Math.random() * BOARD_SIZE);
-            int y = (int) (Math.random() * BOARD_SIZE);
-            if (gameBoard.getField(x, y).getValue() == 0) {
-                i--;
-                continue;    
-            }
-            gameBoard.getField(x, y).setValue(0);
-        }
-
-        return gameBoard.clone();
     }
 
     @Override

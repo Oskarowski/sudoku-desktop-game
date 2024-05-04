@@ -9,13 +9,28 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class App extends Application {
+    private static Stage primaryStage;
+
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sudoku/view/primary.fxml"));
-        Scene scene = new Scene(root, 900, 600);
-        stage.setScene(scene);
-        stage.setTitle("Sudoku Game");
-        stage.show();
+        System.out.println("Start Sudoku GUI");
+
+        primaryStage = stage;
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sudoku/view/MainMenu.fxml"));
+        
+        MainMenuController mainMenuController = new MainMenuController();
+        loader.setController(mainMenuController);
+        
+        Parent root = loader.load();
+
+        primaryStage.setScene(new Scene(root));
+        primaryStage.setTitle("Sudoku Game");
+        primaryStage.show();
+    }
+
+    static void setScene(Parent newRoot) {
+        primaryStage.setScene(new Scene(newRoot));
     }
 
     public static void main(String[] args) {
