@@ -17,7 +17,7 @@ public class MainMenuController implements Initializable {
     public MainMenuController() {
     }
 
-    private DifficultyEnum selectedGameDifficulty = DifficultyEnum.MEDIUM;
+    private DifficultyEnum selectedGameDifficulty = DifficultyEnum.EASY; // Should be easy because initially easy is selected (or I'm tripping)
 
     @FXML
     public RadioButton easyDifficultyButton;

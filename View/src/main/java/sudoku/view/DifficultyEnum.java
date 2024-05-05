@@ -10,6 +10,7 @@ public enum DifficultyEnum {
     MEDIUM(2),
     HARD(3);
 
+    @SuppressWarnings("unused")
     private int value;
 
     private DifficultyEnum(int newVal) {
