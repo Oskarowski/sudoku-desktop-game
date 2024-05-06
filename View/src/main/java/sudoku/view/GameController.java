@@ -77,21 +77,24 @@ public class GameController implements Initializable {
                 textField.setStyle("-fx-alignment: center; -fx-font-weight: bold;");
                 textField.setPrefSize(textFieldPixelSize, textFieldPixelSize);
                 
-                // Limit the text field to only one character & update the board when a key is typed & check if the board is valid & check if the game is over
                 textField.setOnKeyTyped(event -> {
+                    // Limit the text field to only one character
                     if (textField.getText().length() > 1) {
                         textField.deletePreviousChar();
                         return;
                     }
 
+                    // Update the board when a key is typed
                     updateSudokuBoard();
 
+                    // Check if the board is valid
                     if (!sudokuBoard.isValidSudoku()) {
                         textField.setStyle("-fx-text-fill: red; -fx-alignment: center; -fx-font-weight: bold;");
                     } else {
                         textField.setStyle("-fx-text-fill: black; -fx-alignment: center; -fx-font-weight: bold;");
                     }
 
+                    // Check if the game is over
                     if (checkEndGame()) {
                         endGame();
                     }
