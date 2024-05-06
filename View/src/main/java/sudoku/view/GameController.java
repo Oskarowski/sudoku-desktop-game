@@ -1,8 +1,5 @@
 package sudoku.view;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
@@ -17,6 +14,9 @@ import sudoku.model.exceptions.InvalidSudokuException;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
 import sudoku.model.solver.BacktrackingSudokuSolver;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class GameController implements Initializable {
     private DifficultyEnum gameDifficulty;
@@ -71,64 +71,59 @@ public class GameController implements Initializable {
             for (int j = 0; j < gameBoardSize; j++) {
                 SudokuField sudokuField = sudokuBoard.getField(j, i);
                 
-                // Don't show 0s in the text fields (initially)
-                String initialValue = sudokuField.getValue() == 0 ? "" : String.valueOf(sudokuField.getValue());
-                TextField textField = new TextField(initialValue);
-                textField.setStyle("-fx-alignment: center; -fx-font-weight: bold;");
-                textField.setPrefSize(textFieldPixelSize, textFieldPixelSize);
-                
-                textField.setOnKeyTyped(event -> {
-                    // Limit the text field to only one character
-                    if (textField.getText().length() > 1) {
-                        textField.deletePreviousChar();
-                        return;
-                    }
-
-                    // Update the board when a key is typed
-                    updateSudokuBoard();
-
-                    // Check if the board is valid
-                    if (!sudokuBoard.isValidSudoku()) {
-                        textField.setStyle("-fx-text-fill: red; -fx-alignment: center; -fx-font-weight: bold;");
-                    } else {
-                        textField.setStyle("-fx-text-fill: black; -fx-alignment: center; -fx-font-weight: bold;");
-                    }
-
-                    // Check if the game is over
-                    if (checkEndGame()) {
-                        endGame();
-                    }
-                });
+                TextField textField = createTextField(sudokuField, textFieldPixelSize);
 
                 sudokuBoardGridPane.add(textField, j, i);
             }
         }
+    }
 
+    private TextField createTextField(SudokuField sudokuField, double textFieldPixelSize) {
+        // Don't show 0s in the text fields (initially)
+        String initialValue = sudokuField.getValue() == 0 ? "" : String.valueOf(sudokuField.getValue());
+        TextField textField = new TextField(initialValue);
+        textField.setStyle("-fx-alignment: center; -fx-font-weight: bold;");
+        textField.setPrefSize(textFieldPixelSize, textFieldPixelSize);
+        
+        textField.setOnKeyTyped(event -> {
+            // Limit the text field to only one character
+            if (textField.getText().length() > 1) {
+                textField.deletePreviousChar();
+                return;
+            }
+
+            // Update the board when a key is typed
+            updateSudokuBoard();
+
+            // Check if the board is valid
+            if (!sudokuBoard.isValidSudoku()) {
+                textField.setStyle("-fx-text-fill: red; -fx-alignment: center; -fx-font-weight: bold;");
+            } else {
+                textField.setStyle("-fx-text-fill: black; -fx-alignment: center; -fx-font-weight: bold;");
+            }
+
+            // Check if the game is over
+            if (sudokuBoard.checkEndGame()) {
+                endGame();
+            }
+        });
+
+        return textField;
     }
 
     private void updateSudokuBoard() {
         for (Node node : sudokuBoardGridPane.getChildren()) {
             if (node instanceof TextField) {
                 TextField textField = (TextField) node;
-                int value = textField.getText().isEmpty() ? 0 : Integer.parseInt(textField.getText());
+                int value = textField.getText().isEmpty() ? 0
+                    : Integer.parseInt(textField.getText());
+                    
                 // Get the row and column index of the text field
                 int rowIndex = GridPane.getRowIndex(node);
                 int colIndex = GridPane.getColumnIndex(node);
                 sudokuBoard.getField(colIndex, rowIndex).setValue(value);
             }
         }
-    }
-
-    private boolean checkEndGame() {
-        for (int i = 0; i < gameBoardSize; i++) {
-            for (int j = 0; j < gameBoardSize; j++) {
-                SudokuField sudokuField = sudokuBoard.getField(j, i);
-                if (sudokuField.getValue() == 0) {
-                    return false;
-                }
-            }
-        }
-        return sudokuBoard.isValidSudoku();
     }
 
     private void endGame() {

@@ -1,9 +1,5 @@
 package sudoku.view;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,11 +9,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class MainMenuController implements Initializable {
     public MainMenuController() {
     }
 
-    private DifficultyEnum selectedGameDifficulty = DifficultyEnum.EASY; // Should be easy because initially easy is selected (or I'm tripping)
+    private DifficultyEnum selectedGameDifficulty = DifficultyEnum.EASY;
 
     @FXML
     public RadioButton easyDifficultyButton;

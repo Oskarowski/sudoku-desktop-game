@@ -143,6 +143,21 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         }
     }
 
+    private boolean checkBoardFilled() {
+        for (SudokuRow row : rows) {
+            for (SudokuField field : row.getFields()) {
+                if (field.getValue() == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean checkEndGame() {
+        return checkBoardFilled() && isValidSudoku();
+    }
+
     private void subscribeToFieldPropertyChanges() {
         for (SudokuRow row : rows) {
             for (SudokuField field : row.getFields()) {

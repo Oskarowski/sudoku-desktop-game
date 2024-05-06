@@ -1,9 +1,9 @@
 package sudoku.view;
 
-import java.util.Random;
-
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
+
+import java.util.Random;
 
 public enum DifficultyEnum {
     EASY(1),
@@ -35,6 +35,8 @@ public enum DifficultyEnum {
                 break;
             case HARD:
                 numberOfFieldsToClear = 70;
+                break;
+            default:
                 break;
         }
 
