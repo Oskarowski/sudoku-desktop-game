@@ -86,9 +86,11 @@ public class GameController implements Initializable {
         textField.setPrefSize(textFieldPixelSize, textFieldPixelSize);
         
         textField.setOnKeyTyped(event -> {
-            // Limit the text field to only one character
-            if (textField.getText().length() > 1) {
+            String character = event.getCharacter();
+
+            if (textField.getText().length() > 1 || character.length() > 1 || !character.matches("[0-9]")) {
                 textField.deletePreviousChar();
+                event.consume();
                 return;
             }
 
