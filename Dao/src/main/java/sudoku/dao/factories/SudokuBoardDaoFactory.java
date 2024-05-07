@@ -7,7 +7,8 @@ import sudoku.model.models.SudokuBoard;
 public class SudokuBoardDaoFactory {
 
     /**
-     * The `SudokuBoardDaoFactory` class is a factory class that provides methods for creating instances of `FileSudokuBoardDao`.
+     * The `SudokuBoardDaoFactory` class is a factory class that provides methods
+     * for creating instances of `FileSudokuBoardDao`.
      * It shouldn't be possible to create an instance of this class.
      */
     private SudokuBoardDaoFactory() {
