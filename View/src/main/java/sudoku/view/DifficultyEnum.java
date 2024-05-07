@@ -13,7 +13,7 @@ public enum DifficultyEnum {
     @SuppressWarnings("unused")
     private int value;
 
-    private DifficultyEnum(int newVal) {
+    DifficultyEnum(int newVal) {
         this.value = newVal;
     }
 
