@@ -7,8 +7,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sudoku.model.models.SudokuBoard;
+import sudoku.dao.factories.SudokuBoardDaoFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,6 +22,9 @@ public class MainMenuController implements Initializable {
     }
 
     private DifficultyEnum selectedGameDifficulty = DifficultyEnum.EASY;
+
+    @FXML
+    private Button loadGameButton;
 
     @FXML
     public RadioButton easyDifficultyButton;
@@ -71,6 +78,7 @@ public class MainMenuController implements Initializable {
         hardDifficultyButton.setOnAction(this::handleHardDifficultyButton);
         startGameButton.setOnAction(this::handleStartDifficultyButton);
         exitGameButton.setOnAction(this::handleExitDifficultyButton);
+        loadGameButton.setOnAction(event -> loadSavedSudokuGameFromFile());
     }
 
     public void startGame() {
@@ -86,6 +94,22 @@ public class MainMenuController implements Initializable {
             App.setScene(newRoot);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void loadSavedSudokuGameFromFile() {
+        System.out.println("Try To Load Saved Sudoku Game");
+
+        // Dao<SudokuBoard> sudokuBoardDao =
+        // SudokuBoardDaoFactory.createSudokuBoardDao(null)
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Sudoku Board To Be Loaded");
+
+        File chosenFile = fileChooser.showOpenDialog(loadGameButton.getScene().getWindow());
+
+        if (chosenFile != null) {
+            System.out.println("Chosen file: " + chosenFile.getAbsolutePath());
         }
     }
 }
