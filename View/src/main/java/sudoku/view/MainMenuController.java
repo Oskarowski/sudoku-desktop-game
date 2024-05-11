@@ -1,12 +1,20 @@
 package sudoku.view;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.SkinBase;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sudoku.model.models.SudokuBoard;
@@ -22,6 +30,9 @@ public class MainMenuController implements Initializable {
     }
 
     private DifficultyEnum selectedGameDifficulty = DifficultyEnum.EASY;
+
+    @FXML
+    private ChoiceBox<LanguageEnum> languageChoiceBox;
 
     @FXML
     private Button loadGameButton;
@@ -79,16 +90,20 @@ public class MainMenuController implements Initializable {
         startGameButton.setOnAction(this::handleStartDifficultyButton);
         exitGameButton.setOnAction(this::handleExitDifficultyButton);
         loadGameButton.setOnAction(event -> loadSavedSudokuGameFromFile());
+
+        // FIXME set default language label
+        languageChoiceBox.setItems(FXCollections.observableArrayList(LanguageEnum.values()));
+        languageChoiceBox.setOnAction(event -> handleChangeLanguage(event));
     }
 
     public void startGame() {
         System.out.println("Start Game");
-        
+
         GameController gameController = new GameController(selectedGameDifficulty);
-        
+
         FXMLLoader loader = new FXMLLoader(App.class.getResource("/sudoku/view/SudokuGame.fxml"));
         loader.setController(gameController);
-        
+
         try {
             Parent newRoot = loader.load();
             App.setScene(newRoot);
@@ -126,5 +141,56 @@ public class MainMenuController implements Initializable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void handleChangeLanguage(ActionEvent event) {
+        LanguageEnum selectedLanguage = languageChoiceBox.getValue();
+
+        if (selectedLanguage == null) {
+            return;
+        }
+
+        ResourceBundle resourceBundle = null;
+
+        switch (selectedLanguage) {
+            case LanguageEnum.ENGLISH:
+                resourceBundle = ResourceBundle.getBundle("sudoku.view.bundles.en_EN");
+                break;
+            case LanguageEnum.POLISH:
+                resourceBundle = ResourceBundle.getBundle("sudoku.view.bundles.pl_PL");
+                break;
+            default:
+                break;
+        }
+
+        if (resourceBundle == null) {
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sudoku/view/MainMenu.fxml"), resourceBundle);
+
+        loader.setController(this);
+        Parent root;
+        try {
+            root = loader.load();
+            App.setScene(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // <3 https://stackoverflow.com/questions/60756577/choicebox-in-javafx-default-title
+        Platform.runLater(() -> {
+            @SuppressWarnings("unchecked")
+            SkinBase<ChoiceBox<String>> skin = (SkinBase<ChoiceBox<String>>) languageChoiceBox.getSkin();
+            for (Node child : skin.getChildren()) {
+                if (child instanceof Label) {
+                    Label label = (Label) child;
+                    if (label.getText().isEmpty()) {
+                        label.setText(selectedLanguage.toString());
+                    }
+                    return;
+                }
+            }
+        });
     }
 }
