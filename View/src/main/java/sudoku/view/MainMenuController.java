@@ -83,12 +83,12 @@ public class MainMenuController implements Initializable {
 
     public void startGame() {
         System.out.println("Start Game");
-
+        
         GameController gameController = new GameController(selectedGameDifficulty);
-
+        
         FXMLLoader loader = new FXMLLoader(App.class.getResource("/sudoku/view/SudokuGame.fxml"));
         loader.setController(gameController);
-
+        
         try {
             Parent newRoot = loader.load();
             App.setScene(newRoot);
@@ -100,16 +100,31 @@ public class MainMenuController implements Initializable {
     private void loadSavedSudokuGameFromFile() {
         System.out.println("Try To Load Saved Sudoku Game");
 
-        // Dao<SudokuBoard> sudokuBoardDao =
-        // SudokuBoardDaoFactory.createSudokuBoardDao(null)
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Sudoku Board To Be Loaded");
 
-        File chosenFile = fileChooser.showOpenDialog(loadGameButton.getScene().getWindow());
+        File selectedFile = fileChooser.showOpenDialog(loadGameButton.getScene().getWindow());
 
-        if (chosenFile != null) {
-            System.out.println("Chosen file: " + chosenFile.getAbsolutePath());
+        if (selectedFile != null) {
+            String directoryPath = selectedFile.getParent();
+            System.out.println("Directory Path: " + directoryPath);
+
+            String fileName = selectedFile.getName();
+            System.out.println("File Name: " + fileName);
+
+            try {
+                SudokuBoard sudokuBoard = SudokuBoardDaoFactory.createSudokuBoardDao(directoryPath).read(fileName);
+                GameController gameController = new GameController(selectedGameDifficulty,
+                        sudokuBoard);
+
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/sudoku/view/SudokuGame.fxml"));
+                loader.setController(gameController);
+
+                Parent newRoot = loader.load();
+                App.setScene(newRoot);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

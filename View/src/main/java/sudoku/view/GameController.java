@@ -5,20 +5,30 @@ import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.DirectoryChooser;
+import sudoku.dao.factories.SudokuBoardDaoFactory;
+import sudoku.dao.interfaces.Dao;
 import sudoku.model.exceptions.InvalidSudokuException;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
 import sudoku.model.solver.BacktrackingSudokuSolver;
 
+import java.io.File;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class GameController implements Initializable {
+    @FXML
+    private Button saveGameButton;
+
     private DifficultyEnum gameDifficulty;
     private int gameBoardSize;
     private SudokuBoard sudokuBoard;
@@ -26,36 +36,45 @@ public class GameController implements Initializable {
     @FXML
     public GridPane sudokuBoardGridPane;
 
-    public GameController(DifficultyEnum initialGameDifficulty, int initialGameBoardSize) {
+    public GameController(DifficultyEnum initialGameDifficulty, int initialGameBoardSize, SudokuBoard sudokuBoard) {
         this.gameDifficulty = initialGameDifficulty;
         this.gameBoardSize = initialGameBoardSize;
+        this.sudokuBoard = sudokuBoard;
     }
 
     public GameController(DifficultyEnum initialGameDifficulty) {
-        this(initialGameDifficulty, 9);
+        this(initialGameDifficulty, 9, null);
+    }
+
+    public GameController(DifficultyEnum initialGameDifficulty, SudokuBoard sudokuBoard) {
+        this(initialGameDifficulty, 9, sudokuBoard);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Sudoku Game Controller Initialized");
-        sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
 
-        // TODO - remove this solving from here
-        try {
-            sudokuBoard.solveGame();
-        } catch (InvalidSudokuException e) {
-            e.printStackTrace();
+        saveGameButton.setOnAction(event -> saveSudokuGameToFile());
+
+        if (sudokuBoard == null) {
+            sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+
+            try {
+                sudokuBoard.solveGame();
+            } catch (InvalidSudokuException e) {
+                e.printStackTrace();
+            }
+
+            gameDifficulty.clearSudokuFieldsFromSudokuBoardBasedOnDifficulty(sudokuBoard);
         }
-
-        gameDifficulty.clearSudokuFieldsFromSudokuBoardBasedOnDifficulty(sudokuBoard);
 
         initSudokuBoardGridPane();
     }
 
-
     /**
      * Initializes the Sudoku board grid pane.
-     * This method sets up the row and columns for the grid pane based on the game board size.
+     * This method sets up the row and columns for the grid pane based on the game
+     * board size.
      */
     private void initSudokuBoardGridPane() {
         double textFieldPixelSize = 40;
@@ -67,10 +86,10 @@ public class GameController implements Initializable {
                     textFieldPixelSize, Priority.ALWAYS, HPos.CENTER, true);
             sudokuBoardGridPane.getRowConstraints().add(row);
             sudokuBoardGridPane.getColumnConstraints().add(column);
-    
+
             for (int j = 0; j < gameBoardSize; j++) {
                 SudokuField sudokuField = sudokuBoard.getField(j, i);
-                
+
                 TextField textField = createTextField(sudokuField, textFieldPixelSize);
 
                 sudokuBoardGridPane.add(textField, j, i);
@@ -84,7 +103,7 @@ public class GameController implements Initializable {
         TextField textField = new TextField(initialValue);
         textField.setStyle("-fx-alignment: center; -fx-font-weight: bold;");
         textField.setPrefSize(textFieldPixelSize, textFieldPixelSize);
-        
+
         textField.setOnKeyTyped(event -> {
             String character = event.getCharacter();
 
@@ -118,8 +137,8 @@ public class GameController implements Initializable {
             if (node instanceof TextField) {
                 TextField textField = (TextField) node;
                 int value = textField.getText().isEmpty() ? 0
-                    : Integer.parseInt(textField.getText());
-                    
+                        : Integer.parseInt(textField.getText());
+
                 // Get the row and column index of the text field
                 int rowIndex = GridPane.getRowIndex(node);
                 int colIndex = GridPane.getColumnIndex(node);
@@ -134,6 +153,39 @@ public class GameController implements Initializable {
                 TextField textField = (TextField) node;
                 textField.setStyle("-fx-text-fill: green; -fx-alignment: center; -fx-font-weight: bold;");
             }
+        }
+    }
+
+    private void saveSudokuGameToFile() {
+        System.out.println("Try To Save Sudoku Game");
+
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Choose Where To Save Sudoku Board");
+
+        File selectedDirectory = directoryChooser.showDialog(saveGameButton.getScene().getWindow());
+
+        if (selectedDirectory != null) {
+            System.out.println("Directory Path: " + selectedDirectory);
+
+            // Prompt the user to enter the filename under which to save the Sudoku board
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Enter File Name");
+            dialog.setHeaderText("Please enter the name for the Sudoku board file:");
+            dialog.setContentText("File Name:");
+
+            Optional<String> result = dialog.showAndWait();
+
+            if (result.isEmpty()) {
+                return;
+            }
+
+            String fileName = result.get();
+            System.out.println("File Name: " + fileName);
+
+            Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory
+                    .createSudokuBoardDao(selectedDirectory.toString());
+
+            sudokuBoardDao.write(fileName, this.sudokuBoard);
         }
     }
 }
