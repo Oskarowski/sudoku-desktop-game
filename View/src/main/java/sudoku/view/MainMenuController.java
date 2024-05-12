@@ -94,6 +94,8 @@ public class MainMenuController implements Initializable {
         languageChoiceBox.setItems(FXCollections.observableArrayList(LanguageEnum.values()));
         languageChoiceBox.setValue(LanguageEnum.getSelectedLanguage());
         languageChoiceBox.setOnAction(event -> handleChangeLanguage(event));
+
+        displayAuthors();
     }
 
     public void startGame() {
@@ -182,4 +184,25 @@ public class MainMenuController implements Initializable {
             }
         });
     }
+
+    @FXML
+    public Label author1Label;
+    @FXML
+    public Label author2Label;
+    @FXML
+    public Label universityLabel;
+
+    private void displayAuthors(){
+        ResourceBundle authorsResourceBundle = LanguageEnum.getAuthorsResourceBundle();
+
+        String university = authorsResourceBundle.getString("university");
+        universityLabel.setText(university);
+
+        String author1 = authorsResourceBundle.getString("247026");
+        author1Label.setText(author1);
+
+        String author2 = authorsResourceBundle.getString("247027");
+        author2Label.setText(author2);
+    };
+
 }
