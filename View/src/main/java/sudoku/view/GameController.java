@@ -1,5 +1,7 @@
 package sudoku.view;
 
+import javafx.beans.property.adapter.JavaBeanIntegerProperty;
+import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
@@ -7,12 +9,15 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.DirectoryChooser;
+import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
 import sudoku.dao.interfaces.Dao;
 import sudoku.model.exceptions.InvalidSudokuException;
@@ -98,23 +103,55 @@ public class GameController implements Initializable {
     }
 
     private TextField createTextField(SudokuField sudokuField, double textFieldPixelSize) {
-        // Don't show 0s in the text fields (initially)
-        String initialValue = sudokuField.getValue() == 0 ? "" : String.valueOf(sudokuField.getValue());
-        TextField textField = new TextField(initialValue);
+        
+        JavaBeanIntegerPropertyBuilder integerPropertyBuilder = JavaBeanIntegerPropertyBuilder.create();
+        StringConverter stringConverter = new SudokuFieldStringConverter();
+        
+        TextField textField = new TextField();
+        sudokuTextFieldFormatter(textField);
+
+        try {
+            JavaBeanIntegerProperty integerProperty = integerPropertyBuilder
+            .bean(sudokuField)
+            .name("value")
+            .build();
+            textField.textProperty().bindBidirectional(integerProperty, stringConverter);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        
         textField.setStyle("-fx-alignment: center; -fx-font-weight: bold;");
         textField.setPrefSize(textFieldPixelSize, textFieldPixelSize);
+        
+        return textField;
+    }
+    private class SudokuFieldStringConverter extends IntegerStringConverter {
+        @Override
+        public String toString(Integer value) {
+            return value == 0 ? "" : value.toString();
+        }
 
-        textField.setOnKeyTyped(event -> {
-            String character = event.getCharacter();
+        @Override
+        public Integer fromString(String string) {
+            return string.isEmpty() ? 0 : Integer.parseInt(string);
+        }
+    }
+    
+    private void sudokuTextFieldFormatter(TextField textField) {
+        TextFormatter formatter = new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
 
-            if (textField.getText().length() > 1 || character.length() > 1 || !character.matches("[0-9]")) {
-                textField.deletePreviousChar();
-                event.consume();
-                return;
+            if ((newText.isEmpty() && change.isDeleted())) {
+                return change;
             }
+            else if (!newText.matches("[0-9]")) {
+                return null;
+            }
+            return change;
+        });
+        textField.setTextFormatter(formatter);
 
-            // Update the board when a key is typed
-            updateSudokuBoard();
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
 
             // Check if the board is valid
             if (!sudokuBoard.isValidSudoku()) {
@@ -128,23 +165,6 @@ public class GameController implements Initializable {
                 endGame();
             }
         });
-
-        return textField;
-    }
-
-    private void updateSudokuBoard() {
-        for (Node node : sudokuBoardGridPane.getChildren()) {
-            if (node instanceof TextField) {
-                TextField textField = (TextField) node;
-                int value = textField.getText().isEmpty() ? 0
-                        : Integer.parseInt(textField.getText());
-
-                // Get the row and column index of the text field
-                int rowIndex = GridPane.getRowIndex(node);
-                int colIndex = GridPane.getColumnIndex(node);
-                sudokuBoard.getField(colIndex, rowIndex).setValue(value);
-            }
-        }
     }
 
     private void endGame() {
