@@ -20,17 +20,9 @@ public class App extends Application {
 
         primaryStage = stage;
 
-        // Locale locale = new Locale.Builder().setLanguage("en").build();
-        Locale locale = Locale.getDefault();
+        ResourceBundle resourceBundle = LanguageEnum.getResourceBundle();
 
-        ResourceBundle bundle;
-        if (locale.getLanguage().equals("pl")) {
-            bundle = ResourceBundle.getBundle("sudoku.view.bundles.pl_PL");
-        } else { // Default to English for other languages
-            bundle = ResourceBundle.getBundle("sudoku.view.bundles.en_EN");
-        }
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sudoku/view/MainMenu.fxml"), bundle);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sudoku/view/MainMenu.fxml"), resourceBundle);
 
         MainMenuController mainMenuController = new MainMenuController();
         loader.setController(mainMenuController);

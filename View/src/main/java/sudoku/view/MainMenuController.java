@@ -91,8 +91,8 @@ public class MainMenuController implements Initializable {
         exitGameButton.setOnAction(this::handleExitDifficultyButton);
         loadGameButton.setOnAction(event -> loadSavedSudokuGameFromFile());
 
-        // FIXME set default language label
         languageChoiceBox.setItems(FXCollections.observableArrayList(LanguageEnum.values()));
+        languageChoiceBox.setValue(LanguageEnum.getSelectedLanguage());
         languageChoiceBox.setOnAction(event -> handleChangeLanguage(event));
     }
 
@@ -100,8 +100,9 @@ public class MainMenuController implements Initializable {
         System.out.println("Start Game");
 
         GameController gameController = new GameController(selectedGameDifficulty);
+        ResourceBundle resourceBundle = LanguageEnum.getResourceBundle();
 
-        FXMLLoader loader = new FXMLLoader(App.class.getResource("/sudoku/view/SudokuGame.fxml"));
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("/sudoku/view/SudokuGame.fxml"), resourceBundle);
         loader.setController(gameController);
 
         try {
@@ -150,22 +151,9 @@ public class MainMenuController implements Initializable {
             return;
         }
 
-        ResourceBundle resourceBundle = null;
+        LanguageEnum.setSelectedLanguage(selectedLanguage);
 
-        switch (selectedLanguage) {
-            case LanguageEnum.ENGLISH:
-                resourceBundle = ResourceBundle.getBundle("sudoku.view.bundles.en_EN");
-                break;
-            case LanguageEnum.POLISH:
-                resourceBundle = ResourceBundle.getBundle("sudoku.view.bundles.pl_PL");
-                break;
-            default:
-                break;
-        }
-
-        if (resourceBundle == null) {
-            return;
-        }
+        ResourceBundle resourceBundle = LanguageEnum.getResourceBundle();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sudoku/view/MainMenu.fxml"), resourceBundle);
 
@@ -178,7 +166,8 @@ public class MainMenuController implements Initializable {
             e.printStackTrace();
         }
 
-        // <3 https://stackoverflow.com/questions/60756577/choicebox-in-javafx-default-title
+        // <3
+        // https://stackoverflow.com/questions/60756577/choicebox-in-javafx-default-title
         Platform.runLater(() -> {
             @SuppressWarnings("unchecked")
             SkinBase<ChoiceBox<String>> skin = (SkinBase<ChoiceBox<String>>) languageChoiceBox.getSkin();
