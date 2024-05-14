@@ -113,6 +113,9 @@ public class GameController implements Initializable {
                 return;
             }
 
+
+    
+
             // Update the board when a key is typed
             updateSudokuBoard();
 

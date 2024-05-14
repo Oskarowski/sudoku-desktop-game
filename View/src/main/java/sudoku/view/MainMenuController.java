@@ -2,7 +2,6 @@ package sudoku.view;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,13 +11,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SkinBase;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import sudoku.model.models.SudokuBoard;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
+import sudoku.model.models.SudokuBoard;
 
 import java.io.File;
 import java.io.IOException;
@@ -192,7 +190,7 @@ public class MainMenuController implements Initializable {
     @FXML
     public Label universityLabel;
 
-    private void displayAuthors(){
+    private void displayAuthors() {
         ResourceBundle authorsResourceBundle = LanguageEnum.getAuthorsResourceBundle();
 
         String university = authorsResourceBundle.getString("university");
@@ -203,6 +201,5 @@ public class MainMenuController implements Initializable {
 
         String author2 = authorsResourceBundle.getString("247027");
         author2Label.setText(author2);
-    };
-
+    }
 }
