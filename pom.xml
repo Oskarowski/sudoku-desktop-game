@@ -31,6 +31,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>${project.baseUri}/target/website</url>
+        </site>
+    </distributionManagement>
+
     <developers>
         <developer>
             <id>247026</id>
@@ -214,7 +221,6 @@
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.12.1</version>
                     <configuration>
-                        <aggregate>true</aggregate>
                     </configuration>
                 </plugin>
             </plugins>
