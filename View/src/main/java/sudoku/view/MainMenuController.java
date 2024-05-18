@@ -133,7 +133,8 @@ public class MainMenuController implements Initializable {
                 GameController gameController = new GameController(selectedGameDifficulty,
                         sudokuBoard);
 
-                FXMLLoader loader = new FXMLLoader(App.class.getResource("/sudoku/view/SudokuGame.fxml"));
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/sudoku/view/SudokuGame.fxml"),
+                        LanguageEnum.getResourceBundle());
                 loader.setController(gameController);
 
                 Parent newRoot = loader.load();
