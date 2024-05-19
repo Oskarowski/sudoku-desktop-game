@@ -7,12 +7,14 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.DirectoryChooser;
+import javafx.util.converter.IntegerStringConverter;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
 import sudoku.dao.interfaces.Dao;
 import sudoku.model.exceptions.InvalidSudokuException;
@@ -104,57 +106,48 @@ public class GameController implements Initializable {
         textField.setStyle("-fx-alignment: center; -fx-font-weight: bold;");
         textField.setPrefSize(textFieldPixelSize, textFieldPixelSize);
 
-        textField.setOnKeyTyped(event -> {
-            String character = event.getCharacter();
-
-            if (textField.getText().length() > 1 || character.length() > 1 || !character.matches("[0-9]")) {
-                textField.deletePreviousChar();
-                event.consume();
-                return;
+        // Create a TextFormatter with a custom converter
+        TextFormatter<Integer> textFormatter = new TextFormatter<>(new IntegerStringConverter() {
+            @Override
+            public String toString(Integer value) {
+                return value != null && value != 0 ? super.toString(value) : "";
             }
+        }, sudokuField.getValue());
 
+        textFormatter.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null && (newValue < 1 || newValue > 9)) {
+                textFormatter.setValue(oldValue); // Revert to old value
+            }
+        });
 
-    
+        // Bind the TextFormatter to the TextField
+        textField.setTextFormatter(textFormatter);
 
-            // Update the board when a key is typed
-            updateSudokuBoard();
-
-            // Check if the board is valid
-            if (!sudokuBoard.isValidSudoku()) {
-                textField.setStyle("-fx-text-fill: red; -fx-alignment: center; -fx-font-weight: bold;");
+        // Update SudokuField value when TextField text changes
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[0-9]?")) {
+                textField.setText(oldValue);
             } else {
-                textField.setStyle("-fx-text-fill: black; -fx-alignment: center; -fx-font-weight: bold;");
-            }
-
-            // Check if the game is over
-            if (sudokuBoard.checkEndGame()) {
-                endGame();
+                System.out.println("New Value: " + newValue);
+                sudokuField.setValue(newValue.isEmpty() ? 0 : Integer.parseInt(newValue));
+                if (sudokuBoard.checkEndGame()) {
+                    endGame();
+                }
             }
         });
 
         return textField;
     }
 
-    private void updateSudokuBoard() {
-        for (Node node : sudokuBoardGridPane.getChildren()) {
-            if (node instanceof TextField) {
-                TextField textField = (TextField) node;
-                int value = textField.getText().isEmpty() ? 0
-                        : Integer.parseInt(textField.getText());
-
-                // Get the row and column index of the text field
-                int rowIndex = GridPane.getRowIndex(node);
-                int colIndex = GridPane.getColumnIndex(node);
-                sudokuBoard.getField(colIndex, rowIndex).setValue(value);
-            }
-        }
-    }
-
     private void endGame() {
+        System.out.println("Game Finished!");
+        boolean gameFinished = sudokuBoard.checkEndGame();
         for (Node node : sudokuBoardGridPane.getChildren()) {
             if (node instanceof TextField) {
                 TextField textField = (TextField) node;
                 textField.setStyle("-fx-text-fill: green; -fx-alignment: center; -fx-font-weight: bold;");
+                textField.setDisable(gameFinished);
+
             }
         }
     }
