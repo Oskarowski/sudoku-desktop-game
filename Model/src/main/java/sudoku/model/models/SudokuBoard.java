@@ -3,6 +3,9 @@ package sudoku.model.models;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sudoku.model.exceptions.InvalidSudokuException;
 import sudoku.model.solver.BacktrackingSudokuSolver;
 import sudoku.model.solver.SudokuSolver;
@@ -13,8 +16,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class SudokuBoard implements PropertyChangeListener, Serializable, Cloneable {
+    Locale locale = Locale.getDefault();
+    private final Logger logger = LoggerFactory.getLogger(SudokuBoard.class);
+    private transient ResourceBundle exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
+
     public static final int BOARD_SIZE = 9;
     public static final int BOX_SIZE = 3;
 
@@ -84,12 +93,12 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
      * @param value the value to be set in the field
      */
     public void setField(int x, int y, int value) {
-        SudokuField field = rows.get(y).getFields()[x];
-        field.setValue(value);
         try {
+            SudokuField field = rows.get(y).getFields()[x];
+            field.setValue(value);
             verifyBoard();
         } catch (InvalidSudokuException e) {
-            // TODO make desicion what to do when invalid sudoku
+            
         }
     }
 
@@ -139,7 +148,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
 
     private void verifyBoard() throws InvalidSudokuException {
         if (!isValidSudoku()) {
-            throw new InvalidSudokuException("Invalid Sudoku");
+            throw new InvalidSudokuException(exceptionsBundle.getString("error.VerifyBoard"));
         }
     }
 
@@ -222,5 +231,21 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         }
         return clone;
         // deep clone of SudokuBoard using super.clone()
+    }
+
+    public void changeLocale(Locale locale) {
+        this.locale = locale;
+        exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
+        for (SudokuRow row : rows) {
+            row.setLocale(locale);
+        }
+
+        for (SudokuColumn column : columns) {
+            column.setLocale(locale);
+        }
+
+        for (SudokuBox box : boxes) {
+            box.setLocale(locale);  
+        }
     }
 }

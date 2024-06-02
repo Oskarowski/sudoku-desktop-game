@@ -9,12 +9,16 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 public class App extends Application {
     private static Stage primaryStage;
+    private static Logger logger = LoggerFactory.getLogger(App.class);
 
     @Override
     public void start(Stage stage) throws IOException {
-        System.out.println("Start Sudoku GUI");
+        logger.info("Start Sudoku GUI");
 
         primaryStage = stage;
 

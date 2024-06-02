@@ -9,10 +9,14 @@ import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class SudokuField implements Serializable, Cloneable, Comparable<SudokuField> {
     private int value;
     private List<PropertyChangeListener> listeners;
+    private Locale locale = Locale.getDefault();
+    private transient ResourceBundle exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
 
     public SudokuField(int value) {
         this.value = value;
@@ -81,11 +85,17 @@ public class SudokuField implements Serializable, Cloneable, Comparable<SudokuFi
     }
 
     @Override
-    public int compareTo(SudokuField o) throws NullPointerException {
-        if (o == null) {
-            throw new NullPointerException("Argument cannot be null");
+    public int compareTo(SudokuField o){
+        try {
+            return Integer.compare(value, o.value);
+        } catch (NullPointerException e) {
+            throw new NullPointerException(exceptionsBundle.getString("error.NullCompareTo"));
         }
-        return Integer.compare(value, o.value);
         // compare the values of the fields
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+        exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
     }
 }

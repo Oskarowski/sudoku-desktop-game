@@ -27,6 +27,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GameController implements Initializable {
     @FXML
     private Button saveGameButton;
@@ -34,6 +37,7 @@ public class GameController implements Initializable {
     private DifficultyEnum gameDifficulty;
     private int gameBoardSize;
     private SudokuBoard sudokuBoard;
+    private static Logger logger = LoggerFactory.getLogger(GameController.class);
 
     @FXML
     public GridPane sudokuBoardGridPane;
@@ -54,7 +58,7 @@ public class GameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Sudoku Game Controller Initialized");
+        logger.info("Sudoku Game Controller Initialized");
 
         saveGameButton.setOnAction(event -> saveSudokuGameToFile());
 
@@ -128,7 +132,7 @@ public class GameController implements Initializable {
             if (!newValue.matches("[0-9]?")) {
                 textField.setText(oldValue);
             } else {
-                System.out.println("New Value: " + newValue);
+                logger.info("New Value: " + newValue);
                 sudokuField.setValue(newValue.isEmpty() ? 0 : Integer.parseInt(newValue));
                 
                 if (sudokuBoard.isValidSudoku()) {
@@ -147,7 +151,7 @@ public class GameController implements Initializable {
     }
 
     private void endGame() {
-        System.out.println("Game Finished!");
+        logger.info("Game Finished!");
         boolean gameFinished = sudokuBoard.checkEndGame();
         for (Node node : sudokuBoardGridPane.getChildren()) {
             if (node instanceof TextField) {
@@ -160,7 +164,7 @@ public class GameController implements Initializable {
     }
 
     private void saveSudokuGameToFile() {
-        System.out.println("Try To Save Sudoku Game");
+        logger.info("Try To Save Sudoku Game");
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Choose Where To Save Sudoku Board");
@@ -168,7 +172,7 @@ public class GameController implements Initializable {
         File selectedDirectory = directoryChooser.showDialog(saveGameButton.getScene().getWindow());
 
         if (selectedDirectory != null) {
-            System.out.println("Directory Path: " + selectedDirectory);
+            logger.info("Directory Path: " + selectedDirectory);
 
             // Prompt the user to enter the filename under which to save the Sudoku board
             TextInputDialog dialog = new TextInputDialog();
@@ -183,7 +187,7 @@ public class GameController implements Initializable {
             }
 
             String fileName = result.get();
-            System.out.println("File Name: " + fileName);
+            logger.info("File Name: " + fileName);
 
             Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory
                     .createSudokuBoardDao(selectedDirectory.toString());

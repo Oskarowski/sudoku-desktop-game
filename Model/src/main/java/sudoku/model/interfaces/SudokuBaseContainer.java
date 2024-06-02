@@ -2,14 +2,22 @@ package sudoku.model.interfaces;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sudoku.model.helpers.UniqueChecker;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
 
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class SudokuBaseContainer implements Verifiable, Serializable, Cloneable {
     private SudokuField[] fields;
+    private final Logger logger = LoggerFactory.getLogger(SudokuBaseContainer.class);
+    private Locale locale = Locale.getDefault();
+    private transient ResourceBundle exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
 
     public SudokuBaseContainer() {
         fields = new SudokuField[SudokuBoard.BOARD_SIZE];
@@ -24,7 +32,12 @@ public class SudokuBaseContainer implements Verifiable, Serializable, Cloneable 
 
     @Override
     public boolean verify() {
+        try {
         return UniqueChecker.checkUnique(fields);
+        } catch (IllegalArgumentException e) {
+            logger.error(exceptionsBundle.getString("error.Verify"), e);
+            return false;
+        }
     }
 
     @Override
@@ -69,5 +82,13 @@ public class SudokuBaseContainer implements Verifiable, Serializable, Cloneable 
         return clone;
         // deep clone of SudokuBaseContainer using super.clone()
         // when using the clone method, cast the result to prefered implementation
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+        exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
+        for (SudokuField field : fields) {
+            field.setLocale(locale);
+        }
     }
 }

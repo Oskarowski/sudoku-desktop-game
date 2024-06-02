@@ -6,9 +6,13 @@ import sudoku.model.models.SudokuBoard;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class BacktrackingSudokuSolver implements SudokuSolver {
     final int sudokuBoardSize = SudokuBoard.BOARD_SIZE;
+    Locale locale = Locale.getDefault();
+    private transient ResourceBundle exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
 
     @Override
     public void solve(SudokuBoard board) throws InvalidSudokuException {
@@ -18,7 +22,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
     @Override
     public void fillBoard(SudokuBoard board) throws InvalidSudokuException {
         if (!fillBoardRecursive(0, 0, board)) {
-            throw new InvalidSudokuException("Not able to fill the Sudoku board");
+            throw new InvalidSudokuException(exceptionsBundle.getString("error.FillBoard"));
         }
     }
 
@@ -79,4 +83,8 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         return validPlacement;
     }
 
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+        exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
+    }
 }
