@@ -33,7 +33,6 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
             logger.info("Sudoku board read from file: " + name);
             return (SudokuBoard) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("Error occurred while reading sudoku board from file: " + name);
             throw new SudokuReadException("Error occurred while reading sudoku board from file: " + name, e);
         }
     }
@@ -45,7 +44,6 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
             oos.writeObject(obj);
             logger.info("Sudoku board saved to file: " + name);
         } catch (IOException e) {
-            logger.error("Error occurred while saving sudoku board to file: " + name);
             throw new SudokuWriteException("Error occurred while saving sudoku board to file: " + name, e);
         }
     }

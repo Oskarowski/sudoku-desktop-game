@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.DirectoryChooser;
 import javafx.util.converter.IntegerStringConverter;
+import sudoku.dao.exceptions.SudokuReadException;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
 import sudoku.dao.interfaces.Dao;
 import sudoku.model.exceptions.InvalidSudokuException;
@@ -166,33 +167,39 @@ public class GameController implements Initializable {
     private void saveSudokuGameToFile() {
         logger.info("Try To Save Sudoku Game");
 
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Choose Where To Save Sudoku Board");
+        try {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Choose Where To Save Sudoku Board");
 
-        File selectedDirectory = directoryChooser.showDialog(saveGameButton.getScene().getWindow());
+            File selectedDirectory = directoryChooser.showDialog(saveGameButton.getScene().getWindow());
 
-        if (selectedDirectory != null) {
-            logger.info("Directory Path: " + selectedDirectory);
+            if (selectedDirectory != null) {
+                logger.info("Directory Path: " + selectedDirectory);
 
-            // Prompt the user to enter the filename under which to save the Sudoku board
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Enter File Name");
-            dialog.setHeaderText("Please enter the name for the Sudoku board file:");
-            dialog.setContentText("File Name:");
+                // Prompt the user to enter the filename under which to save the Sudoku board
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Enter File Name");
+                dialog.setHeaderText("Please enter the name for the Sudoku board file:");
+                dialog.setContentText("File Name:");
 
-            Optional<String> result = dialog.showAndWait();
+                Optional<String> result = dialog.showAndWait();
 
-            if (result.isEmpty()) {
-                return;
+                if (result.isEmpty()) {
+                    return;
+                }
+
+                String fileName = result.get();
+                logger.info("File Name: " + fileName);
+
+                Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory
+                        .createSudokuBoardDao(selectedDirectory.toString());
+
+                sudokuBoardDao.write(fileName, this.sudokuBoard);
             }
-
-            String fileName = result.get();
-            logger.info("File Name: " + fileName);
-
-            Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory
-                    .createSudokuBoardDao(selectedDirectory.toString());
-
-            sudokuBoardDao.write(fileName, this.sudokuBoard);
+        } catch (SudokuReadException e) {
+            logger.error("Error occurred while saving sudoku board to file");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

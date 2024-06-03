@@ -15,6 +15,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.SkinBase;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sudoku.dao.exceptions.SudokuReadException;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
 import sudoku.model.models.SudokuBoard;
 
@@ -144,6 +145,8 @@ public class MainMenuController implements Initializable {
 
                 Parent newRoot = loader.load();
                 App.setScene(newRoot);
+            } catch (SudokuReadException e) {
+                logger.error("Error occurred while reading sudoku board from file: " + fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }

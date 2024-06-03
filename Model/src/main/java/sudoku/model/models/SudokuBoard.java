@@ -98,7 +98,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
             field.setValue(value);
             verifyBoard();
         } catch (InvalidSudokuException e) {
-            
+            logger.info("Invalid Sudoku board after setting field value");
         }
     }
 
