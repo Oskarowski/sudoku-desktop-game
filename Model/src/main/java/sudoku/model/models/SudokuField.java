@@ -16,7 +16,8 @@ public class SudokuField implements Serializable, Cloneable, Comparable<SudokuFi
     private int value;
     private List<PropertyChangeListener> listeners;
     private Locale locale = Locale.getDefault();
-    private transient ResourceBundle exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
+    private transient ResourceBundle exceptionsBundle = ResourceBundle
+            .getBundle("sudoku.model.bundles.exceptions", locale);
 
     public SudokuField(int value) {
         this.value = value;
@@ -85,7 +86,7 @@ public class SudokuField implements Serializable, Cloneable, Comparable<SudokuFi
     }
 
     @Override
-    public int compareTo(SudokuField o){
+    public int compareTo(SudokuField o) {
         try {
             return Integer.compare(value, o.value);
         } catch (NullPointerException e) {

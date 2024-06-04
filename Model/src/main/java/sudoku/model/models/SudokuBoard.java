@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sudoku.model.exceptions.InvalidSudokuException;
 import sudoku.model.solver.BacktrackingSudokuSolver;
 import sudoku.model.solver.SudokuSolver;
@@ -22,7 +21,8 @@ import java.util.ResourceBundle;
 public class SudokuBoard implements PropertyChangeListener, Serializable, Cloneable {
     Locale locale = Locale.getDefault();
     private final Logger logger = LoggerFactory.getLogger(SudokuBoard.class);
-    private transient ResourceBundle exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
+    private transient ResourceBundle exceptionsBundle = ResourceBundle
+            .getBundle("sudoku.model.bundles.exceptions", locale);
 
     public static final int BOARD_SIZE = 9;
     public static final int BOX_SIZE = 3;

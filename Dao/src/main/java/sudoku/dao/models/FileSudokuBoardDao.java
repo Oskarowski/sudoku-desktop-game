@@ -1,5 +1,7 @@
 package sudoku.dao.models;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sudoku.dao.exceptions.SudokuReadException;
 import sudoku.dao.exceptions.SudokuWriteException;
 import sudoku.dao.interfaces.Dao;
@@ -14,9 +16,6 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     private String directoryPath;

@@ -12,7 +12,8 @@ import java.util.ResourceBundle;
 public class BacktrackingSudokuSolver implements SudokuSolver {
     final int sudokuBoardSize = SudokuBoard.BOARD_SIZE;
     Locale locale = Locale.getDefault();
-    private transient ResourceBundle exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
+    private transient ResourceBundle exceptionsBundle = ResourceBundle
+            .getBundle("sudoku.model.bundles.exceptions", locale);
 
     @Override
     public void solve(SudokuBoard board) throws InvalidSudokuException {

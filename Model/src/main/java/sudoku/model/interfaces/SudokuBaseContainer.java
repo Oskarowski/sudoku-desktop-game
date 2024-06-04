@@ -4,7 +4,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sudoku.model.helpers.UniqueChecker;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
@@ -17,7 +16,8 @@ public class SudokuBaseContainer implements Verifiable, Serializable, Cloneable 
     private SudokuField[] fields;
     private final Logger logger = LoggerFactory.getLogger(SudokuBaseContainer.class);
     private Locale locale = Locale.getDefault();
-    private transient ResourceBundle exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
+    private transient ResourceBundle exceptionsBundle = ResourceBundle
+            .getBundle("sudoku.model.bundles.exceptions", locale);
 
     public SudokuBaseContainer() {
         fields = new SudokuField[SudokuBoard.BOARD_SIZE];
