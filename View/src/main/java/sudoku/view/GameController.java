@@ -131,12 +131,6 @@ public class GameController implements Initializable {
                 System.out.println("New Value: " + newValue);
                 sudokuField.setValue(newValue.isEmpty() ? 0 : Integer.parseInt(newValue));
                 
-                if (sudokuBoard.isValidSudoku()) {
-                    textField.setStyle("-fx-text-fill: black; -fx-alignment: center; -fx-font-weight: bold;");
-                } else {
-                    textField.setStyle("-fx-text-fill: red; -fx-alignment: center; -fx-font-weight: bold;");
-                }
-
                 if (sudokuBoard.checkEndGame()) {
                     endGame();
                 }
