@@ -2,6 +2,7 @@ package sudoku.dao.factories;
 
 import sudoku.dao.interfaces.Dao;
 import sudoku.dao.models.FileSudokuBoardDao;
+import sudoku.jdbcdao.JdbcSudokuBoardDao;
 import sudoku.model.models.SudokuBoard;
 
 public class SudokuBoardDaoFactory {
@@ -22,5 +23,10 @@ public class SudokuBoardDaoFactory {
      */
     public static Dao<SudokuBoard> createSudokuBoardDao(String dirPath) {
         return new FileSudokuBoardDao(dirPath);
+    }
+
+    public static Dao<SudokuBoard> createJdbcSudokuBoardDao(){
+        // load from .env file
+        return new JdbcSudokuBoardDao("jdbc:sqlite:sudoku.db");
     }
 }
