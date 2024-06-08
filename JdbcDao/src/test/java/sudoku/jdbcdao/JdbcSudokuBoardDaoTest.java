@@ -1,53 +1,58 @@
 package sudoku.jdbcdao;
 
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 import org.junit.jupiter.api.*;
 import sudoku.dao.interfaces.Dao;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.solver.BacktrackingSudokuSolver;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_BOARD;
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_FIELD;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class JdbcSudokuBoardDaoTest {
 
-    private static final String TEST_DB_URL = "jdbc:sqlite:test_sudoku.db";
+    private static final String TEST_DB_URL = "jdbc:sqlite:test/java/sudoku/jdbcdao/test_sudoku.db";
     private Connection connection;
+        private DSLContext dsl;
 
-    @BeforeAll
-    public void setUp() throws SQLException {
-        connection = DriverManager.getConnection(TEST_DB_URL);
-        try (var statement = connection.createStatement()) {
-            statement.execute("CREATE TABLE IF NOT EXISTS SudokuBoard (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "name TEXT UNIQUE)");
-            statement.execute("CREATE TABLE IF NOT EXISTS SudokuField (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "board_id INTEGER, " +
-                    "row INTEGER, " +
-                    "column INTEGER, " +
-                    "value INTEGER, " +
-                    "FOREIGN KEY(board_id) REFERENCES SudokuBoard(id))");
+
+        @BeforeAll
+        public void setUp() throws SQLException {
+            File dbFile = new File("test/java/sudoku/jdbcdao/test_sudoku.db");
+            dbFile.getParentFile().mkdirs(); // Ensure directories exist
+    
+            connection = DriverManager.getConnection(TEST_DB_URL);
+            dsl = DSL.using(connection, SQLDialect.SQLITE);
+    
+            dsl.createTableIfNotExists(SUDOKU_BOARD)
+                    .columns(SUDOKU_BOARD.fields())
+                    .execute();
+    
+            dsl.createTableIfNotExists(SUDOKU_FIELD)
+                    .columns(SUDOKU_FIELD.fields())
+                    .execute();
         }
-    }
+
 
     @AfterEach
     public void tearDown() throws SQLException {
-        try (var statement = connection.createStatement()) {
-            statement.execute("DELETE FROM SudokuField");
-            statement.execute("DELETE FROM SudokuBoard");
-        }
+        dsl.deleteFrom(SUDOKU_FIELD).execute();
+        dsl.deleteFrom(SUDOKU_BOARD).execute();
     }
 
     @AfterAll
     public void cleanUp() throws SQLException {
-        try (var statement = connection.createStatement()) {
-            statement.execute("DROP TABLE SudokuField");
-            statement.execute("DROP TABLE SudokuBoard");
-        }
+        dsl.dropTableIfExists(SUDOKU_FIELD).execute();
+        dsl.dropTableIfExists(SUDOKU_BOARD).execute();
         connection.close();
     }
 

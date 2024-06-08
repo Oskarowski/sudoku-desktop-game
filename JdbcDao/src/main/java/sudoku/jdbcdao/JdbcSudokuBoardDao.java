@@ -2,142 +2,124 @@ package sudoku.jdbcdao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 
 import sudoku.dao.interfaces.Dao;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.solver.BacktrackingSudokuSolver;
 
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_BOARD;
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_FIELD;
+
 public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
-    private static final String DB_URL = "jdbc:sqlite:db/sudoku.db";
+    private final String url;
     private Connection connection;
+    private DSLContext dsl;
 
-    public JdbcSudokuBoardDao() throws SQLException {
-        connection = DriverManager.getConnection(DB_URL);
-        createTablesIfNotExist();
+    public JdbcSudokuBoardDao(String url) {
+        this.url = url;
     }
 
-    public JdbcSudokuBoardDao(String connectionString) throws SQLException {
-        connection = DriverManager.getConnection(connectionString);
-        createTablesIfNotExist();
-    }
-
-    private void createTablesIfNotExist() throws SQLException {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS SudokuBoard (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "name TEXT UNIQUE)");
-
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS SudokuField (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "board_id INTEGER, " +
-                    "row INTEGER, " +
-                    "column INTEGER, " +
-                    "value INTEGER, " +
-                    "FOREIGN KEY(board_id) REFERENCES SudokuBoard(id))");
-        }
+    private void connect() throws Exception {
+        connection = DriverManager.getConnection(url);
+        dsl = DSL.using(connection, SQLDialect.SQLITE);
     }
 
     @Override
-    public void write(String name, SudokuBoard obj) {
+    public void write(String name, SudokuBoard board) {
         try {
+            connect();
             connection.setAutoCommit(false); // Start transaction
 
-            // Insert the board
-            try (PreparedStatement insertBoardStmt = connection.prepareStatement(
-                    "INSERT INTO SudokuBoard (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+            var boardId = dsl.insertInto(SUDOKU_BOARD)
+                    .columns(SUDOKU_BOARD.NAME)
+                    .values(name)
+                    .returning(SUDOKU_BOARD.ID)
+                    .fetchOne()
+                    .getId();
 
-                insertBoardStmt.setString(1, name);
-                insertBoardStmt.executeUpdate();
-
-                int boardId;
-                try (ResultSet generatedKeys = insertBoardStmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        boardId = generatedKeys.getInt(1);
-                    } else {
-                        connection.rollback();
-                        throw new SQLException("Creating board failed, no ID obtained.");
-                    }
+            for (int row = 0; row < 9; row++) {
+                for (int col = 0; col < 9; col++) {
+                    int value = board.getField(row, col).getValue();
+                    dsl.insertInto(SUDOKU_FIELD)
+                            .columns(SUDOKU_FIELD.BOARD_ID, SUDOKU_FIELD.ROW, SUDOKU_FIELD.COLUMN, SUDOKU_FIELD.VALUE)
+                            .values(boardId, row, col, value)
+                            .execute();
                 }
-
-                // Insert fields
-                try (PreparedStatement insertFieldStmt = connection.prepareStatement(
-                        "INSERT INTO SudokuField (board_id, row, column, value) VALUES (?, ?, ?, ?)")) {
-
-                    for (int row = 0; row < 9; row++) {
-                        for (int col = 0; col < 9; col++) {
-                            insertFieldStmt.setInt(1, boardId);
-                            insertFieldStmt.setInt(2, row);
-                            insertFieldStmt.setInt(3, col);
-                            insertFieldStmt.setInt(4, obj.getField(row, col).getValue());
-                            insertFieldStmt.addBatch();
-                        }
-                    }
-                    insertFieldStmt.executeBatch();
-                }
-
-                connection.commit(); // Commit transaction
-            } catch (SQLException e) {
-                connection.rollback(); // Rollback transaction on error
-                throw e;
-            } finally {
-                connection.setAutoCommit(true); // Restore auto-commit mode
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+            connection.commit(); // Commit transaction
+        } catch (Exception e) {
+            try {
+                connection.rollback(); // Rollback transaction on error
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection();
         }
     }
 
     @Override
     public SudokuBoard read(String name) {
-        SudokuBoard board = null;
-        try (PreparedStatement selectBoardStmt = connection.prepareStatement(
-                "SELECT id FROM SudokuBoard WHERE name = ?");
-                PreparedStatement selectFieldsStmt = connection.prepareStatement(
-                        "SELECT row, column, value FROM SudokuField WHERE board_id = ?")) {
+        try {
+            connect();
 
-            selectBoardStmt.setString(1, name);
-            try (ResultSet boardRs = selectBoardStmt.executeQuery()) {
-                if (boardRs.next()) {
-                    int boardId = boardRs.getInt("id");
+            var boardRecord = dsl.selectFrom(SUDOKU_BOARD)
+                    .where(SUDOKU_BOARD.NAME.eq(name))
+                    .fetchOne();
 
-                    board = new SudokuBoard(new BacktrackingSudokuSolver());
-
-                    selectFieldsStmt.setInt(1, boardId);
-                    try (ResultSet fieldsRs = selectFieldsStmt.executeQuery()) {
-                        while (fieldsRs.next()) {
-                            int row = fieldsRs.getInt("row");
-                            int col = fieldsRs.getInt("column");
-                            int value = fieldsRs.getInt("value");
-                            board.setField(row, col, value);
-                        }
-                    }
-                }
+            if (boardRecord == null) {
+                return null;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+            SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
+
+            dsl.selectFrom(SUDOKU_FIELD)
+                    .where(SUDOKU_FIELD.BOARD_ID.eq(boardRecord.getId()))
+                    .forEach(record -> {
+                        int row = record.getRow();
+                        int col = record.getColumn();
+                        int value = record.getValue();
+                        board.setField(row, col, value);
+                    });
+
+            return board;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection();
         }
-        return board;
     }
 
     @Override
     public List<String> names() {
-        List<String> names = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT name FROM SudokuBoard")) {
-
-            while (rs.next()) {
-                names.add(rs.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try {
+            connect();
+            return dsl.select(SUDOKU_BOARD.NAME)
+                    .from(SUDOKU_BOARD)
+                    .fetch(SUDOKU_BOARD.NAME);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection();
         }
-        return names;
+    }
+
+    private void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
