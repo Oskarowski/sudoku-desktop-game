@@ -71,7 +71,13 @@
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
         <testSourceDirectory>src/test/java</testSourceDirectory>
+
         <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -81,7 +87,6 @@
             <plugin>
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq-codegen-maven</artifactId>
-                <version>3.19.9</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>
@@ -129,7 +134,7 @@
                     </execution>
                 </executions>
             </plugin>
-
+<!-- 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -180,7 +185,7 @@
                     </filesets>
                 </configuration>
             </plugin>
-
+ -->
 
 
         </plugins>

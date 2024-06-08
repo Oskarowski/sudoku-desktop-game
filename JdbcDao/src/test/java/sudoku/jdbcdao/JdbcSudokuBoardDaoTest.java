@@ -20,16 +20,13 @@ import static sudokujdbc.jooq.generated.Tables.SUDOKU_FIELD;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class JdbcSudokuBoardDaoTest {
 
-    private static final String TEST_DB_URL = "jdbc:sqlite:test/java/sudoku/jdbcdao/test_sudoku.db";
+    private static final String TEST_DB_URL = "jdbc:sqlite:target/test_sudoku.db";
     private Connection connection;
         private DSLContext dsl;
 
 
         @BeforeAll
         public void setUp() throws SQLException {
-            File dbFile = new File("test/java/sudoku/jdbcdao/test_sudoku.db");
-            dbFile.getParentFile().mkdirs(); // Ensure directories exist
-    
             connection = DriverManager.getConnection(TEST_DB_URL);
             dsl = DSL.using(connection, SQLDialect.SQLITE);
     
