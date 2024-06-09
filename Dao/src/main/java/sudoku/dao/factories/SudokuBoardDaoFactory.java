@@ -28,14 +28,15 @@ public class SudokuBoardDaoFactory {
      * Factory method to create a JDBC SudokuBoardDao instance if JDBC is available.
      *
      * @return the JDBC SudokuBoardDao instance
+     * @param dbUrl the URL of the database
      * @throws UnsupportedOperationException if the JdbcSudokuBoardDao reflection is
      *                                       not available
      */
     @SuppressWarnings("unchecked")
-    public static Dao<SudokuBoard> createJdbcSudokuBoardDao() {
+    public static Dao<SudokuBoard> createJdbcSudokuBoardDao(String dbUrl) {
         try {
             Class<?> jdbcDaoClass = Class.forName("sudoku.jdbcdao.JdbcSudokuBoardDao");
-            var jdbcDao = jdbcDaoClass.getConstructor(String.class).newInstance("jdbc:sqlite:sudoku.db");
+            var jdbcDao = jdbcDaoClass.getConstructor(String.class).newInstance("jdbc:sqlite:" + dbUrl);
             return (Dao<SudokuBoard>) jdbcDao;
 
         } catch (Exception e) {

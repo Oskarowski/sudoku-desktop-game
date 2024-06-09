@@ -28,6 +28,7 @@ import sudoku.model.solver.BacktrackingSudokuSolver;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -216,10 +217,14 @@ public class GameController implements Initializable {
                 return;
             }
     
+            // Path to the database file in JdbcDaoProject directory
+            String jdbcDaoProjectPath = Paths.get("..", "JdbcDao", "sudoku.db").toString();
+            String databaseFilePath = Paths.get(jdbcDaoProjectPath).toAbsolutePath().toString();
+
             String gameName = result.get();
             logger.info("Game Name: " + gameName);
     
-            try (Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory.createJdbcSudokuBoardDao()) {
+            try (Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory.createJdbcSudokuBoardDao(databaseFilePath)) {
                 if(!(sudokuBoardDao instanceof JdbcSudokuBoardDao)){
                     logger.error("sudokuBoardDao is not instance of JdbcSudokuBoardDao");
                     throw new Error("sudokuBoardDao is not instance of JdbcSudokuBoardDao");
