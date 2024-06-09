@@ -1,5 +1,8 @@
 package sudoku.jdbcdao;
 
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_BOARD;
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_FIELD;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,11 +13,12 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
 import sudoku.dao.interfaces.Dao;
+import sudoku.jdbcdao.exceptions.JdbcDaoConnectionException;
+import sudoku.jdbcdao.exceptions.JdbcDaoReadException;
+import sudoku.jdbcdao.exceptions.JdbcDaoTransactionException;
+import sudoku.jdbcdao.exceptions.JdbcDaoWriteException;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.solver.BacktrackingSudokuSolver;
-
-import static sudokujdbc.jooq.generated.Tables.SUDOKU_BOARD;
-import static sudokujdbc.jooq.generated.Tables.SUDOKU_FIELD;
 
 public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
     private final String url;
@@ -25,16 +29,24 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
         this.url = url;
     }
 
-    private void connect() throws Exception {
-        connection = DriverManager.getConnection(url);
-        dsl = DSL.using(connection, SQLDialect.SQLITE);
+    private void connect() throws JdbcDaoConnectionException {
+        try {
+            connection = DriverManager.getConnection(url);
+            dsl = DSL.using(connection, SQLDialect.SQLITE);
+        } catch (SQLException e) {
+            throw new JdbcDaoConnectionException(e);
+        }
     }
 
     @Override
-    public void write(String name, SudokuBoard board) {
+    public void write(String name, SudokuBoard board) throws JdbcDaoWriteException, JdbcDaoTransactionException {
+        if (name.isEmpty()) {
+            throw new JdbcDaoWriteException();
+        }
+
         try {
             connect();
-            connection.setAutoCommit(false); // Start transaction
+            connection.setAutoCommit(false);
 
             var boardId = dsl.insertInto(SUDOKU_BOARD)
                     .columns(SUDOKU_BOARD.NAME)
@@ -53,21 +65,21 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
                 }
             }
 
-            connection.commit(); // Commit transaction
+            connection.commit();
         } catch (Exception e) {
             try {
                 connection.rollback(); // Rollback transaction on error
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                throw new JdbcDaoTransactionException(ex);
             }
-            throw new RuntimeException(e);
+            throw new JdbcDaoWriteException(e);
         } finally {
             closeConnection();
         }
     }
 
     @Override
-    public SudokuBoard read(String name) {
+    public SudokuBoard read(String name) throws JdbcDaoReadException {
         try {
             connect();
 
@@ -92,40 +104,44 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
 
             return board;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new JdbcDaoReadException(e);
         } finally {
             closeConnection();
         }
     }
 
     @Override
-    public List<String> names() {
+    public List<String> names() throws JdbcDaoReadException {
         try {
             connect();
             return dsl.select(SUDOKU_BOARD.NAME)
                     .from(SUDOKU_BOARD)
                     .fetch(SUDOKU_BOARD.NAME);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new JdbcDaoReadException(e);
         } finally {
             closeConnection();
         }
     }
 
     private void closeConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        if (connection == null) {
+            return;
+        }
+
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void close() throws SQLException {
-        if (connection != null) {
-            connection.close();
+        if (connection == null) {
+            return;
         }
+
+        connection.close();
     }
 }

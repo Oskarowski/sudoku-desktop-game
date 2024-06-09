@@ -5,10 +5,11 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.*;
 import sudoku.dao.interfaces.Dao;
+import sudoku.jdbcdao.exceptions.JdbcDaoReadException;
+import sudoku.jdbcdao.exceptions.JdbcDaoWriteException;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.solver.BacktrackingSudokuSolver;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -89,6 +90,24 @@ public class JdbcSudokuBoardDaoTest {
     public void testReadNonExistentBoard() {
         try (Dao<SudokuBoard> dao = new JdbcSudokuBoardDao(TEST_DB_URL)) {
             assertNull(dao.read("nonExistentBoard"));
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @Test
+    public void testWriteException() {
+        try (Dao<SudokuBoard> dao = new JdbcSudokuBoardDao(TEST_DB_URL)) {
+            assertThrows(JdbcDaoWriteException.class, () -> dao.write("", new SudokuBoard(new BacktrackingSudokuSolver())));
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    @Test
+    public void testReadException() {
+        try (Dao<SudokuBoard> dao = new JdbcSudokuBoardDao("jdbc:sqlite:invalid_path/test_sudoku.db")) {
+            assertThrows(JdbcDaoReadException.class, () -> dao.names());
         } catch (Exception e) {
             fail(e);
         }
