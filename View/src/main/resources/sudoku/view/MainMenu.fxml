@@ -48,12 +48,15 @@
    <bottom>
       <VBox alignment="CENTER" prefHeight="154.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
+            <ChoiceBox fx:id="gamesNameChoiceBox" prefWidth="200.0" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="exitGameButton" mnemonicParsing="false" prefHeight="26.0"
                      prefWidth="100.0" text="%EXIT_GAME" />
                   <Button fx:id="loadGameButton" mnemonicParsing="false" prefHeight="26.0"
                      prefWidth="100.0" text="%LOAD_GAME" textAlignment="CENTER" />
+                  <Button fx:id="loadGameFromDBButton" mnemonicParsing="false" prefHeight="26.0"
+                     prefWidth="100.0" text="%LOAD_GAME_FROM_DB" textAlignment="CENTER" />
                   <Button fx:id="startGameButton" mnemonicParsing="false" prefHeight="26.0"
                      prefWidth="100.0" text="%START_GAME" />
                </children>
