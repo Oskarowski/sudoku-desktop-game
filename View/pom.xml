@@ -37,6 +37,7 @@
             <groupId>sudoku.jdbcdao</groupId>
             <artifactId>JdbcDaoProject</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>

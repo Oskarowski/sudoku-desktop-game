@@ -2,7 +2,6 @@ package sudoku.dao.factories;
 
 import sudoku.dao.interfaces.Dao;
 import sudoku.dao.models.FileSudokuBoardDao;
-import sudoku.jdbcdao.JdbcSudokuBoardDao;
 import sudoku.model.models.SudokuBoard;
 
 public class SudokuBoardDaoFactory {
@@ -25,8 +24,22 @@ public class SudokuBoardDaoFactory {
         return new FileSudokuBoardDao(dirPath);
     }
 
-    public static Dao<SudokuBoard> createJdbcSudokuBoardDao(){
-        // load from .env file
-        return new JdbcSudokuBoardDao("jdbc:sqlite:sudoku.db");
+    /**
+     * Factory method to create a JDBC SudokuBoardDao instance if JDBC is available.
+     *
+     * @return the JDBC SudokuBoardDao instance
+     * @throws UnsupportedOperationException if the JdbcSudokuBoardDao reflection is
+     *                                       not available
+     */
+    @SuppressWarnings("unchecked")
+    public static Dao<SudokuBoard> createJdbcSudokuBoardDao() {
+        try {
+            Class<?> jdbcDaoClass = Class.forName("sudoku.jdbcdao.JdbcSudokuBoardDao");
+            var jdbcDao = jdbcDaoClass.getConstructor(String.class).newInstance("jdbc:sqlite:sudoku.db");
+            return (Dao<SudokuBoard>) jdbcDao;
+
+        } catch (Exception e) {
+            throw new UnsupportedOperationException("JdbcSudokuBoardDao reflection is not available ", e);
+        }
     }
 }

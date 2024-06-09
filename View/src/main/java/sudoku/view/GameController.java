@@ -219,8 +219,12 @@ public class GameController implements Initializable {
             String gameName = result.get();
             logger.info("Game Name: " + gameName);
     
-            // Create the JdbcSudokuBoardDao instance
-            try (Dao<SudokuBoard> sudokuBoardDao = new JdbcSudokuBoardDao("jdbc:sqlite:sudoku.db")) {
+            try (Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory.createJdbcSudokuBoardDao()) {
+                if(!(sudokuBoardDao instanceof JdbcSudokuBoardDao)){
+                    logger.error("sudokuBoardDao is not instance of JdbcSudokuBoardDao");
+                    throw new Error("sudokuBoardDao is not instance of JdbcSudokuBoardDao");
+                }
+
                 sudokuBoardDao.write(gameName, this.sudokuBoard);
                 logger.info("Sudoku board saved to database with name: " + gameName);
             } catch (Exception e) {
@@ -229,7 +233,7 @@ public class GameController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Unexpected error occurred", e);
+            logger.error("Unexpected error occurred E90235", e);
         }
     }
 }
