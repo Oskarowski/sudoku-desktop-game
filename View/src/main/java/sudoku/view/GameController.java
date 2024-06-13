@@ -15,6 +15,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.DirectoryChooser;
 import javafx.util.converter.IntegerStringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sudoku.dao.exceptions.SudokuReadException;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
 import sudoku.dao.interfaces.Dao;
 import sudoku.model.exceptions.InvalidSudokuException;
@@ -34,6 +37,7 @@ public class GameController implements Initializable {
     private DifficultyEnum gameDifficulty;
     private int gameBoardSize;
     private SudokuBoard sudokuBoard;
+    private static Logger logger = LoggerFactory.getLogger(GameController.class);
 
     @FXML
     public GridPane sudokuBoardGridPane;
@@ -54,7 +58,7 @@ public class GameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Sudoku Game Controller Initialized");
+        logger.info("Sudoku Game Controller Initialized");
 
         saveGameButton.setOnAction(event -> saveSudokuGameToFile());
 
@@ -128,9 +132,9 @@ public class GameController implements Initializable {
             if (!newValue.matches("[0-9]?")) {
                 textField.setText(oldValue);
             } else {
-                System.out.println("New Value: " + newValue);
+                logger.info("New Value: " + newValue);
                 sudokuField.setValue(newValue.isEmpty() ? 0 : Integer.parseInt(newValue));
-                
+
                 if (sudokuBoard.checkEndGame()) {
                     endGame();
                 }
@@ -141,7 +145,7 @@ public class GameController implements Initializable {
     }
 
     private void endGame() {
-        System.out.println("Game Finished!");
+        logger.info("Game Finished!");
         boolean gameFinished = sudokuBoard.checkEndGame();
         for (Node node : sudokuBoardGridPane.getChildren()) {
             if (node instanceof TextField) {
@@ -154,35 +158,41 @@ public class GameController implements Initializable {
     }
 
     private void saveSudokuGameToFile() {
-        System.out.println("Try To Save Sudoku Game");
+        logger.info("Try To Save Sudoku Game");
 
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Choose Where To Save Sudoku Board");
+        try {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Choose Where To Save Sudoku Board");
 
-        File selectedDirectory = directoryChooser.showDialog(saveGameButton.getScene().getWindow());
+            File selectedDirectory = directoryChooser.showDialog(saveGameButton.getScene().getWindow());
 
-        if (selectedDirectory != null) {
-            System.out.println("Directory Path: " + selectedDirectory);
+            if (selectedDirectory != null) {
+                logger.info("Directory Path: " + selectedDirectory);
 
-            // Prompt the user to enter the filename under which to save the Sudoku board
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Enter File Name");
-            dialog.setHeaderText("Please enter the name for the Sudoku board file:");
-            dialog.setContentText("File Name:");
+                // Prompt the user to enter the filename under which to save the Sudoku board
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Enter File Name");
+                dialog.setHeaderText("Please enter the name for the Sudoku board file:");
+                dialog.setContentText("File Name:");
 
-            Optional<String> result = dialog.showAndWait();
+                Optional<String> result = dialog.showAndWait();
 
-            if (result.isEmpty()) {
-                return;
+                if (result.isEmpty()) {
+                    return;
+                }
+
+                String fileName = result.get();
+                logger.info("File Name: " + fileName);
+
+                Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory
+                        .createSudokuBoardDao(selectedDirectory.toString());
+
+                sudokuBoardDao.write(fileName, this.sudokuBoard);
             }
-
-            String fileName = result.get();
-            System.out.println("File Name: " + fileName);
-
-            Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory
-                    .createSudokuBoardDao(selectedDirectory.toString());
-
-            sudokuBoardDao.write(fileName, this.sudokuBoard);
+        } catch (SudokuReadException e) {
+            logger.error("Error occurred while saving sudoku board to file");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

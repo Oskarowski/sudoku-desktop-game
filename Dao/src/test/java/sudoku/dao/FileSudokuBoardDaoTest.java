@@ -57,9 +57,13 @@ public class FileSudokuBoardDaoTest {
 
         final String boardName = "test_board";
 
-        dao.write(boardName, sampleBoard);
+        assertNotNull(sampleBoard);
 
-        SudokuBoard readBoard = dao.read(boardName);
+        assertDoesNotThrow(() -> dao.write(boardName, sampleBoard));
+
+        assertTrue(new File(TEST_DIRECTORY, boardName).exists());
+
+        SudokuBoard readBoard = assertDoesNotThrow(() -> dao.read(boardName));
 
         assertNotNull(readBoard);
 
@@ -70,4 +74,5 @@ public class FileSudokuBoardDaoTest {
         assertEquals(sampleBoard.getField(4, 7), readBoard.getField(4, 7));
     }
 
+    
 }

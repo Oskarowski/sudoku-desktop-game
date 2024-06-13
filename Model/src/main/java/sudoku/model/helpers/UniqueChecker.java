@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UniqueChecker {
-    public static boolean checkUnique(SudokuField[] fields) {
+    public static boolean checkUnique(SudokuField[] fields) throws IllegalArgumentException {
         Set<Integer> values = new HashSet<Integer>();
         for (SudokuField field : fields) {
             int value = field.getValue();

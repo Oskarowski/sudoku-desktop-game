@@ -1,5 +1,9 @@
 package sudoku.dao.models;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sudoku.dao.exceptions.SudokuReadException;
+import sudoku.dao.exceptions.SudokuWriteException;
 import sudoku.dao.interfaces.Dao;
 import sudoku.model.models.SudokuBoard;
 
@@ -15,6 +19,7 @@ import java.util.List;
 
 public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     private String directoryPath;
+    Logger logger = LoggerFactory.getLogger(FileSudokuBoardDao.class);
 
     public FileSudokuBoardDao(String directoryPath) {
         this.directoryPath = directoryPath;
@@ -24,10 +29,10 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     public SudokuBoard read(String name) {
         try (ObjectInputStream ois = new ObjectInputStream(
                 new FileInputStream(Paths.get(directoryPath, name).toString()))) {
+            logger.info("Sudoku board read from file: " + name);
             return (SudokuBoard) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
+            throw new SudokuReadException("Error occurred while reading sudoku board from file: " + name, e);
         }
     }
 
@@ -36,8 +41,9 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
         try (ObjectOutputStream oos = new ObjectOutputStream(
                 new FileOutputStream(Paths.get(directoryPath, name).toString()))) {
             oos.writeObject(obj);
+            logger.info("Sudoku board saved to file: " + name);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SudokuWriteException("Error occurred while saving sudoku board to file: " + name, e);
         }
     }
 

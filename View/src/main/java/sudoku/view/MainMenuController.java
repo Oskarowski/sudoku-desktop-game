@@ -15,6 +15,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.SkinBase;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sudoku.dao.exceptions.SudokuReadException;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
 import sudoku.model.models.SudokuBoard;
 
@@ -26,6 +29,8 @@ import java.util.ResourceBundle;
 public class MainMenuController implements Initializable {
     public MainMenuController() {
     }
+
+    private final Logger logger = LoggerFactory.getLogger(MainMenuController.class);
 
     private DifficultyEnum selectedGameDifficulty = DifficultyEnum.EASY;
 
@@ -63,7 +68,7 @@ public class MainMenuController implements Initializable {
     }
 
     private void setDifficulty(DifficultyEnum difficulty) {
-        System.out.println("Difficulty set to " + difficulty);
+        logger.info("Difficulty set to " + difficulty);
         selectedGameDifficulty = difficulty;
     }
 
@@ -80,7 +85,7 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Main Menu Controller Initialized");
+        logger.info("Main Menu Controller Initialized");
 
         easyDifficultyButton.setOnAction(this::handleEasyDifficultyButton);
         mediumDifficultyButton.setOnAction(this::handleMediumDifficultyButton);
@@ -97,7 +102,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void startGame() {
-        System.out.println("Start Game");
+        logger.info("Start Game");
 
         GameController gameController = new GameController(selectedGameDifficulty);
         ResourceBundle resourceBundle = LanguageEnum.getResourceBundle();
@@ -114,7 +119,7 @@ public class MainMenuController implements Initializable {
     }
 
     private void loadSavedSudokuGameFromFile() {
-        System.out.println("Try To Load Saved Sudoku Game");
+        logger.info("Load Saved Sudoku Game");
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Sudoku Board To Be Loaded");
@@ -123,10 +128,10 @@ public class MainMenuController implements Initializable {
 
         if (selectedFile != null) {
             String directoryPath = selectedFile.getParent();
-            System.out.println("Directory Path: " + directoryPath);
+            logger.info("Directory Path: " + directoryPath);
 
             String fileName = selectedFile.getName();
-            System.out.println("File Name: " + fileName);
+            logger.info("File Name: " + fileName);
 
             try {
                 SudokuBoard sudokuBoard = SudokuBoardDaoFactory.createSudokuBoardDao(directoryPath).read(fileName);
@@ -139,6 +144,8 @@ public class MainMenuController implements Initializable {
 
                 Parent newRoot = loader.load();
                 App.setScene(newRoot);
+            } catch (SudokuReadException e) {
+                logger.error("Error occurred while reading sudoku board from file: " + fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }

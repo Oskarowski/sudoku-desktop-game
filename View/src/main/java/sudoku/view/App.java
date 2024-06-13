@@ -5,16 +5,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
 
 public class App extends Application {
     private static Stage primaryStage;
+    private static Logger logger = LoggerFactory.getLogger(App.class);
 
     @Override
     public void start(Stage stage) throws IOException {
-        System.out.println("Start Sudoku GUI");
+        logger.info("Start Sudoku GUI");
 
         primaryStage = stage;
 
