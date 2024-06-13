@@ -6,6 +6,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import sudoku.model.exceptions.FillingBoardSudokuException;
 import sudoku.model.exceptions.InvalidSudokuException;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
@@ -19,7 +20,7 @@ public class SudokuBoardTest {
 
         try {
             sudokuBoard.solveGame();
-        } catch (InvalidSudokuException e) {
+        } catch (FillingBoardSudokuException e) {
             e.printStackTrace();
             fail("solveGame() threw an InvalidSudokuException");
         }
@@ -35,7 +36,7 @@ public class SudokuBoardTest {
         try {
             sudokuBoard1.solveGame();
             sudokuBoard2.solveGame();
-        } catch (InvalidSudokuException e) {
+        } catch (FillingBoardSudokuException e) {
             e.printStackTrace();
             fail("solveGame() threw an InvalidSudokuException");
         }

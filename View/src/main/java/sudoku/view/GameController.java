@@ -21,6 +21,7 @@ import sudoku.dao.exceptions.SudokuReadException;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
 import sudoku.dao.interfaces.Dao;
 import sudoku.jdbcdao.JdbcSudokuBoardDao;
+import sudoku.model.exceptions.FillingBoardSudokuException;
 import sudoku.model.exceptions.InvalidSudokuException;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
@@ -72,7 +73,7 @@ public class GameController implements Initializable {
 
             try {
                 sudokuBoard.solveGame();
-            } catch (InvalidSudokuException e) {
+            } catch (FillingBoardSudokuException e) {
                 e.printStackTrace();
             }
 

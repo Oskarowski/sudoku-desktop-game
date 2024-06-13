@@ -4,20 +4,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import sudoku.model.exceptions.SudokuFieldComparisonException;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class SudokuField implements Serializable, Cloneable, Comparable<SudokuField> {
     private int value;
     private List<PropertyChangeListener> listeners;
-    private Locale locale = Locale.getDefault();
-    private transient ResourceBundle exceptionsBundle = ResourceBundle
-            .getBundle("sudoku.model.bundles.exceptions", locale);
 
     public SudokuField(int value) {
         this.value = value;
@@ -56,8 +53,8 @@ public class SudokuField implements Serializable, Cloneable, Comparable<SudokuFi
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
-            .append("value", value) // Assuming 'value' is your field value
-            .toString();
+                .append("value", value)
+                .toString();
     }
 
     @Override
@@ -74,9 +71,9 @@ public class SudokuField implements Serializable, Cloneable, Comparable<SudokuFi
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17,37)
-            .append(value)
-            .toHashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(value)
+                .toHashCode();
     }
 
     @Override
@@ -90,13 +87,7 @@ public class SudokuField implements Serializable, Cloneable, Comparable<SudokuFi
         try {
             return Integer.compare(value, o.value);
         } catch (NullPointerException e) {
-            throw new NullPointerException(exceptionsBundle.getString("error.NullCompareTo"));
+            throw new SudokuFieldComparisonException(e);
         }
-        // compare the values of the fields
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-        exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
     }
 }
