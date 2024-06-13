@@ -6,8 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-
+import org.junit.jupiter.api.Assertions;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
 import sudoku.dao.interfaces.Dao;
 import sudoku.model.exceptions.InvalidSudokuException;
@@ -17,14 +16,6 @@ import sudoku.model.solver.BacktrackingSudokuSolver;
 public class FileSudokuBoardDaoTest {
     // Directory path for testing
     private static final String TEST_DIRECTORY = "test_dir";
-
-    // Dao instance for testing
-    private Dao<SudokuBoard> dao;
-
-    @BeforeEach
-    void setUp() {
-        dao = SudokuBoardDaoFactory.createSudokuBoardDao(TEST_DIRECTORY);
-    }
 
     private void cleanUpDirectory(File directory) {
         File[] files = directory.listFiles();
@@ -59,20 +50,24 @@ public class FileSudokuBoardDaoTest {
 
         assertNotNull(sampleBoard);
 
-        assertDoesNotThrow(() -> dao.write(boardName, sampleBoard));
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.createSudokuBoardDao(TEST_DIRECTORY)) {
+            assertDoesNotThrow(() -> dao.write(boardName, sampleBoard));
 
-        assertTrue(new File(TEST_DIRECTORY, boardName).exists());
+            assertTrue(new File(TEST_DIRECTORY, boardName).exists());
 
-        SudokuBoard readBoard = assertDoesNotThrow(() -> dao.read(boardName));
+            SudokuBoard readBoard = assertDoesNotThrow(() -> dao.read(boardName));
+            assertNotNull(readBoard);
 
-        assertNotNull(readBoard);
+            assertEquals(sampleBoard, readBoard);
 
-        assertEquals(sampleBoard, readBoard);
+            assertEquals(sampleBoard.getField(0, 0), readBoard.getField(0, 0));
+            assertEquals(sampleBoard.getField(0, 5), readBoard.getField(0, 5));
+            assertEquals(sampleBoard.getField(4, 7), readBoard.getField(4, 7));
 
-        assertEquals(sampleBoard.getField(0, 0), readBoard.getField(0, 0));
-        assertEquals(sampleBoard.getField(0, 5), readBoard.getField(0, 5));
-        assertEquals(sampleBoard.getField(4, 7), readBoard.getField(4, 7));
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+
     }
 
-    
 }

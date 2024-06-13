@@ -19,11 +19,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sudoku.dao.exceptions.SudokuReadException;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
+import sudoku.dao.interfaces.Dao;
+import sudoku.jdbcdao.JdbcSudokuBoardDao;
 import sudoku.model.models.SudokuBoard;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
@@ -39,6 +44,11 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private Button loadGameButton;
+    @FXML
+    private Button loadGameFromDBButton;
+
+    @FXML
+    private ChoiceBox<String> gamesNameChoiceBox;
 
     @FXML
     public RadioButton easyDifficultyButton;
@@ -93,6 +103,9 @@ public class MainMenuController implements Initializable {
         startGameButton.setOnAction(this::handleStartDifficultyButton);
         exitGameButton.setOnAction(this::handleExitDifficultyButton);
         loadGameButton.setOnAction(event -> loadSavedSudokuGameFromFile());
+        loadGameFromDBButton.setOnAction(event -> loadSavedSudokuGameFromDB());
+
+        gamesNameChoiceBox.getItems().addAll(this.loadAvailableSudokuGamesFromDB());
 
         languageChoiceBox.setItems(FXCollections.observableArrayList(LanguageEnum.values()));
         languageChoiceBox.setValue(LanguageEnum.getSelectedLanguage());
@@ -134,21 +147,63 @@ public class MainMenuController implements Initializable {
             logger.info("File Name: " + fileName);
 
             try {
-                SudokuBoard sudokuBoard = SudokuBoardDaoFactory.createSudokuBoardDao(directoryPath).read(fileName);
+                SudokuBoard sudokuBoard;
+                try {
+                    sudokuBoard = SudokuBoardDaoFactory.createSudokuBoardDao(directoryPath).read(fileName);
+                    GameController gameController = new GameController(selectedGameDifficulty,
+                            sudokuBoard);
+
+                    FXMLLoader loader = new FXMLLoader(App.class.getResource("/sudoku/view/SudokuGame.fxml"),
+                            LanguageEnum.getResourceBundle());
+                    loader.setController(gameController);
+
+                    Parent newRoot = loader.load();
+                    App.setScene(newRoot);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (SudokuReadException e) {
+                logger.error("Error occurred while reading sudoku board from file: " + fileName);
+            }
+        }
+    }
+
+    private void loadSavedSudokuGameFromDB() {
+        logger.info("Load Saved Sudoku Game From DB");
+
+        String selectedGameName = gamesNameChoiceBox.getValue();
+
+        if (selectedGameName == null) {
+            return;
+        }
+
+        try {
+            // Path to the database file in JdbcDaoProject directory
+            String jdbcDaoProjectPath = Paths.get("..", "JdbcDao", "sudoku.db").toString();
+            String databaseFilePath = Paths.get(jdbcDaoProjectPath).toAbsolutePath().toString();
+
+            try (Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory.createJdbcSudokuBoardDao(databaseFilePath)) {
+                if (!(sudokuBoardDao instanceof JdbcSudokuBoardDao)) {
+                    logger.error("sudokuBoardDao is not instance of JdbcSudokuBoardDao");
+                    throw new Error("sudokuBoardDao is not instance of JdbcSudokuBoardDao");
+                }
+
+                SudokuBoard sudokuBoard = sudokuBoardDao.read(selectedGameName);
                 GameController gameController = new GameController(selectedGameDifficulty,
                         sudokuBoard);
-
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("/sudoku/view/SudokuGame.fxml"),
                         LanguageEnum.getResourceBundle());
                 loader.setController(gameController);
 
                 Parent newRoot = loader.load();
                 App.setScene(newRoot);
-            } catch (SudokuReadException e) {
-                logger.error("Error occurred while reading sudoku board from file: " + fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            } catch (Exception e) {
+                throw e;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Unexpected error occurred E23635", e);
         }
     }
 
@@ -189,6 +244,25 @@ public class MainMenuController implements Initializable {
                 }
             }
         });
+    }
+
+    /**
+     * Retrieves a list of available Sudoku game names from the database.
+     *
+     * @return A list of strings representing the names of available Sudoku games.
+     *         Returns null if an error occurred while loading the games from the
+     *         database.
+     */
+    public List<String> loadAvailableSudokuGamesFromDB() {
+        String jdbcDaoProjectPath = Paths.get("..", "JdbcDao", "sudoku.db").toString();
+        String databaseFilePath = Paths.get(jdbcDaoProjectPath).toAbsolutePath().toString();
+        try (Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory.createJdbcSudokuBoardDao(databaseFilePath)) {
+            List<String> gameNames = sudokuBoardDao.names();
+            return gameNames;
+        } catch (Exception e) {
+            this.logger.error("[E90236] Not able to load available sudoku games from database", e);
+        }
+        return Collections.emptyList();
     }
 
     @FXML

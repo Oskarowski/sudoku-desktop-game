@@ -5,6 +5,7 @@
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
@@ -23,6 +24,11 @@
       </Label>
    </top>
    <bottom>
-      <Button fx:id="saveGameButton" mnemonicParsing="false" text="%SAVE_GAME" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+                <Button fx:id="saveGameToFileButton" mnemonicParsing="false" text="%SAVE_GAME_TO_FILE" textAlignment="CENTER" />
+                <Button fx:id="saveGameToDatabaseButton" mnemonicParsing="false" text="%SAVE_GAME_TO_DATABASE" textAlignment="CENTER" />
+         </children>
+      </HBox>
    </bottom>
 </BorderPane>

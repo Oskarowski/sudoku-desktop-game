@@ -33,6 +33,12 @@
             <artifactId>DaoProject</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>sudoku.jdbcdao</groupId>
+            <artifactId>JdbcDaoProject</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
