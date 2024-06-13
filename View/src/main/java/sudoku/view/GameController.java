@@ -137,7 +137,6 @@ public class GameController implements Initializable {
             if (!newValue.matches("[0-9]?")) {
                 textField.setText(oldValue);
             } else {
-                logger.info("New Value: " + newValue);
                 sudokuField.setValue(newValue.isEmpty() ? 0 : Integer.parseInt(newValue));
 
                 if (sudokuBoard.checkEndGame()) {
