@@ -26,6 +26,9 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
     private DSLContext dsl;
 
     public JdbcSudokuBoardDao(String url) {
+        if (url == null || url.trim().isEmpty()) {
+            throw new IllegalArgumentException("URL cannot be null or empty");
+        }
         this.url = url;
     }
 
