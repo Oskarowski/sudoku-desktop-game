@@ -8,29 +8,23 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sudoku.dao.exceptions.SudokuReadException;
-import sudoku.dao.factories.SudokuBoardDaoFactory;
-import sudoku.dao.interfaces.Dao;
-import sudoku.jdbcdao.JdbcSudokuBoardDao;
 import sudoku.model.exceptions.FillingBoardSudokuException;
-import sudoku.model.exceptions.InvalidSudokuException;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.models.SudokuField;
 import sudoku.model.solver.BacktrackingSudokuSolver;
+import sudoku.view.strategies.SaveSudokuBoardStrategy;
+import sudoku.view.strategies.SaveSudokuBoardToDatabaseStrategy;
+import sudoku.view.strategies.SaveSudokuBoardToFileStrategy;
 
-import java.io.File;
 import java.net.URL;
-import java.nio.file.Paths;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class GameController implements Initializable {
@@ -65,8 +59,8 @@ public class GameController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("Sudoku Game Controller Initialized");
 
-        saveGameToFileButton.setOnAction(event -> saveSudokuGameToFile());
-        saveGameToDatabaseButton.setOnAction(event -> saveSudokuGameToDatabase());
+        saveGameToFileButton.setOnAction(event -> saveSudokuGame(new SaveSudokuBoardToFileStrategy()));
+        saveGameToDatabaseButton.setOnAction(event -> saveSudokuGame(new SaveSudokuBoardToDatabaseStrategy()));
 
         if (sudokuBoard == null) {
             sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
@@ -162,83 +156,12 @@ public class GameController implements Initializable {
         }
     }
 
-    private void saveSudokuGameToFile() {
-        logger.info("Try To Save Sudoku Game");
-
+    private void saveSudokuGame(SaveSudokuBoardStrategy strategy) {
+        Stage stage = (Stage) saveGameToFileButton.getScene().getWindow(); // Or any node to get the window
         try {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setTitle("Choose Where To Save Sudoku Board");
-
-            File selectedDirectory = directoryChooser.showDialog(saveGameToFileButton.getScene().getWindow());
-
-            if (selectedDirectory != null) {
-                logger.info("Directory Path: " + selectedDirectory);
-
-                // Prompt the user to enter the filename under which to save the Sudoku board
-                TextInputDialog dialog = new TextInputDialog();
-                dialog.setTitle("Enter File Name");
-                dialog.setHeaderText("Please enter the name for the Sudoku board file:");
-                dialog.setContentText("File Name:");
-
-                Optional<String> result = dialog.showAndWait();
-
-                if (result.isEmpty()) {
-                    return;
-                }
-
-                String fileName = result.get();
-                logger.info("File Name: " + fileName);
-
-                Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory
-                        .createSudokuBoardDao(selectedDirectory.toString());
-
-                sudokuBoardDao.write(fileName, this.sudokuBoard);
-            }
-        } catch (SudokuReadException e) {
-            logger.error("Error occurred while saving sudoku board to file");
+            strategy.save(sudokuBoard, stage);
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveSudokuGameToDatabase() {
-        logger.info("Try To Save Sudoku Game In Database");
-    
-        try {
-            // Prompt the user to enter the name under which to save the Sudoku board
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Enter Game Name");
-            dialog.setHeaderText("Please enter the name for the Sudoku board game:");
-            dialog.setContentText("Game Name:");
-    
-            Optional<String> result = dialog.showAndWait();
-    
-            if (result.isEmpty()) {
-                return;
-            }
-    
-            // Path to the database file in JdbcDaoProject directory
-            String jdbcDaoProjectPath = Paths.get("..", "JdbcDao", "sudoku.db").toString();
-            String databaseFilePath = Paths.get(jdbcDaoProjectPath).toAbsolutePath().toString();
-
-            String gameName = result.get();
-            logger.info("Game Name: " + gameName);
-    
-            try (Dao<SudokuBoard> sudokuBoardDao = SudokuBoardDaoFactory.createJdbcSudokuBoardDao(databaseFilePath)) {
-                if(!(sudokuBoardDao instanceof JdbcSudokuBoardDao)){
-                    logger.error("sudokuBoardDao is not instance of JdbcSudokuBoardDao");
-                    throw new Error("sudokuBoardDao is not instance of JdbcSudokuBoardDao");
-                }
-
-                sudokuBoardDao.write(gameName, this.sudokuBoard);
-                logger.info("Sudoku board saved to database with name: " + gameName);
-            } catch (Exception e) {
-                logger.error("Error occurred while saving sudoku board to database", e);
-                throw e;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("Unexpected error occurred E90235", e);
+            logger.error("Failed to save the SudokuBoard", e);
         }
     }
 }
