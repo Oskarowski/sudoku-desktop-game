@@ -15,42 +15,40 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static sudokujdbc.jooq.generated.Tables.SUDOKU_BOARD;
-import static sudokujdbc.jooq.generated.Tables.SUDOKU_FIELD;
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_BOARDS;
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_FIELDS;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class JdbcSudokuBoardDaoTest {
 
     private static final String TEST_DB_URL = "jdbc:sqlite:target/test_sudoku.db";
     private Connection connection;
-        private DSLContext dsl;
+    private DSLContext dsl;
 
+    @BeforeAll
+    public void setUp() throws SQLException {
+        connection = DriverManager.getConnection(TEST_DB_URL);
+        dsl = DSL.using(connection, SQLDialect.SQLITE);
 
-        @BeforeAll
-        public void setUp() throws SQLException {
-            connection = DriverManager.getConnection(TEST_DB_URL);
-            dsl = DSL.using(connection, SQLDialect.SQLITE);
-    
-            dsl.createTableIfNotExists(SUDOKU_BOARD)
-                    .columns(SUDOKU_BOARD.fields())
-                    .execute();
-    
-            dsl.createTableIfNotExists(SUDOKU_FIELD)
-                    .columns(SUDOKU_FIELD.fields())
-                    .execute();
-        }
+        dsl.createTableIfNotExists(SUDOKU_BOARDS)
+                .columns(SUDOKU_BOARDS.fields())
+                .execute();
 
+        dsl.createTableIfNotExists(SUDOKU_FIELDS)
+                .columns(SUDOKU_FIELDS.fields())
+                .execute();
+    }
 
     @AfterEach
     public void tearDown() throws SQLException {
-        dsl.deleteFrom(SUDOKU_FIELD).execute();
-        dsl.deleteFrom(SUDOKU_BOARD).execute();
+        dsl.deleteFrom(SUDOKU_FIELDS).execute();
+        dsl.deleteFrom(SUDOKU_BOARDS).execute();
     }
 
     @AfterAll
     public void cleanUp() throws SQLException {
-        dsl.dropTableIfExists(SUDOKU_FIELD).execute();
-        dsl.dropTableIfExists(SUDOKU_BOARD).execute();
+        dsl.dropTableIfExists(SUDOKU_FIELDS).execute();
+        dsl.dropTableIfExists(SUDOKU_BOARDS).execute();
         connection.close();
     }
 
@@ -98,7 +96,8 @@ public class JdbcSudokuBoardDaoTest {
     @Test
     public void testWriteException() {
         try (Dao<SudokuBoard> dao = new JdbcSudokuBoardDao(TEST_DB_URL)) {
-            assertThrows(JdbcDaoWriteException.class, () -> dao.write("", new SudokuBoard(new BacktrackingSudokuSolver())));
+            assertThrows(JdbcDaoWriteException.class,
+                    () -> dao.write("", new SudokuBoard(new BacktrackingSudokuSolver())));
         } catch (Exception e) {
             fail(e);
         }

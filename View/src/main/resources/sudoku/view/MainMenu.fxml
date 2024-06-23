@@ -6,6 +6,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -17,7 +19,7 @@
 
 
    <center>
-      <VBox alignment="CENTER" prefHeight="18.0" prefWidth="600.0">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="600.0">
          <children>
             <!-- Difficulty Level Label -->
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="602.0"
@@ -35,7 +37,7 @@
                      <ToggleGroup fx:id="difficultyToggleGroup" />
                   </toggleGroup>
                </RadioButton>
-               <RadioButton fx:id="mediumDifficultyButton" mnemonicParsing="false"
+               <RadioButton fx:id="mediumDifficultyButton" mnemonicParsing="false" selected="true"
                   text="%MEDIUM_DIFFICULTY" toggleGroup="$difficultyToggleGroup" />
                <RadioButton fx:id="hardDifficultyButton" mnemonicParsing="false"
                   text="%HARD_DIFFICULTY" toggleGroup="$difficultyToggleGroup" />
@@ -46,32 +48,91 @@
 
 
    <bottom>
-      <VBox alignment="CENTER" prefHeight="154.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="205.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <ChoiceBox fx:id="gamesNameChoiceBox" prefWidth="200.0" />
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER" prefHeight="120.0" prefWidth="600.0"
+               BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="exitGameButton" mnemonicParsing="false" prefHeight="26.0"
-                     prefWidth="100.0" text="%EXIT_GAME" />
-                  <Button fx:id="loadGameButton" mnemonicParsing="false" prefHeight="26.0"
-                     prefWidth="100.0" text="%LOAD_GAME" textAlignment="CENTER" />
-                  <Button fx:id="loadGameFromDBButton" mnemonicParsing="false" prefHeight="26.0"
-                     prefWidth="100.0" text="%LOAD_GAME_FROM_DB" textAlignment="CENTER" />
-                  <Button fx:id="startGameButton" mnemonicParsing="false" prefHeight="26.0"
-                     prefWidth="100.0" text="%START_GAME" />
+                  <Button fx:id="loadGameButton" mnemonicParsing="false" prefHeight="54.0"
+                     prefWidth="135.0" text="%LOAD_GAME" textAlignment="CENTER">
+                     <graphic>
+                        <ImageView fitHeight="45.0" fitWidth="44.0" pickOnBounds="true"
+                           preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/floppy-disk-solid.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="55.0" fitWidth="50.0" pickOnBounds="true"
+                           preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/database-solid.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                           <children>
+                              <ChoiceBox fx:id="gamesNameChoiceBox" prefHeight="26.0"
+                                 prefWidth="106.0" />
+                              <Button fx:id="loadGameFromDBButton" mnemonicParsing="false"
+                                 prefHeight="26.0" prefWidth="100.0" text="%LOAD_GAME_FROM_DB"
+                                 textAlignment="CENTER" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Button fx:id="startGameButton" mnemonicParsing="false" prefHeight="54.0"
+                     prefWidth="135.0" text="%START_GAME">
+                     <graphic>
+                        <ImageView fitHeight="50.0" fitWidth="33.0" pickOnBounds="true"
+                           preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/play-solid.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="54.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <HBox alignment="TOP_CENTER" prefHeight="42.0" prefWidth="600.0"
+               BorderPane.alignment="CENTER">
                <children>
-                  <VBox alignment="TOP_CENTER" prefHeight="55.0" prefWidth="240.0">
-                     <Label fx:id="universityLabel" alignment="CENTER" prefHeight="20.0" prefWidth="238.0"
-                        text="university placeholder" textAlignment="CENTER">
+                  <Button fx:id="exitGameButton" mnemonicParsing="false" prefHeight="30.0"
+                     prefWidth="125.0" text="%EXIT_GAME" textAlignment="CENTER">
+                     <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="33.0" pickOnBounds="true"
+                           preserveRatio="true">
+                           <image>
+                              <Image url="@../../icons/right-from-bracket-solid.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets top="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="54.0" prefWidth="600.0"
+               BorderPane.alignment="CENTER">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="55.0" prefWidth="350.0">
+                     <Label fx:id="universityLabel" alignment="CENTER" prefHeight="20.0"
+                        prefWidth="238.0" text="university placeholder" textAlignment="CENTER">
                         <font>
                            <Font size="14.0" />
                         </font>
                      </Label>
-                     <Label fx:id="author1Label" text="author1 placeholder"/>
-                     <Label fx:id="author2Label" text="author2 placeholder"/>
+                     <Label fx:id="author1Label" text="author1 placeholder" />
+                     <Label fx:id="author2Label" text="author2 placeholder" />
+                     <HBox.margin>
+                        <Insets bottom="15.0" top="15.0" />
+                     </HBox.margin>
                   </VBox>
                </children>
             </HBox>
@@ -80,22 +141,28 @@
    </bottom>
 
    <top>
-      <VBox alignment="CENTER" prefHeight="117.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="98.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="36.0" prefWidth="300.0"
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="300.0"
                text="%MENU_TITLE" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
             </Label>
-            <ChoiceBox fx:id="languageChoiceBox" prefHeight="26.0" prefWidth="108.0">
-               <VBox.margin>
-                  <Insets top="15.0" />
-               </VBox.margin>
-            </ChoiceBox>
+            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="600.0">
+               <children>
+                  <ImageView fitHeight="31.0" fitWidth="45.0" pickOnBounds="true"
+                     preserveRatio="true">
+                     <image>
+                        <Image url="@../../icons/language-solid.png" />
+                     </image>
+                  </ImageView>
+                  <ChoiceBox fx:id="languageChoiceBox" prefHeight="26.0" prefWidth="108.0" />
+               </children>
+            </HBox>
          </children>
          <BorderPane.margin>
-            <Insets top="50.0" />
+            <Insets top="25.0" />
          </BorderPane.margin>
       </VBox>
    </top>

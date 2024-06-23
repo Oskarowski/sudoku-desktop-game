@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ public class App extends Application {
         ResourceBundle resourceBundle = LanguageEnum.getResourceBundle();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sudoku/view/MainMenu.fxml"), resourceBundle);
+        Image icon = new Image(getClass().getResourceAsStream("/icons/favicon.png"));
 
         MainMenuController mainMenuController = new MainMenuController();
         loader.setController(mainMenuController);
@@ -33,6 +35,7 @@ public class App extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("Sudoku Game");
         primaryStage.show();
+        primaryStage.getIcons().add(icon);
     }
 
     static void setScene(Parent newRoot) {
@@ -42,5 +45,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }

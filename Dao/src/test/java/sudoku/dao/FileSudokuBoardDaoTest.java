@@ -9,7 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import sudoku.dao.factories.SudokuBoardDaoFactory;
 import sudoku.dao.interfaces.Dao;
-import sudoku.model.exceptions.InvalidSudokuException;
+import sudoku.model.exceptions.FillingBoardSudokuException;
 import sudoku.model.models.SudokuBoard;
 import sudoku.model.solver.BacktrackingSudokuSolver;
 
@@ -38,7 +38,7 @@ public class FileSudokuBoardDaoTest {
         SudokuBoard sampleBoard = new SudokuBoard(new BacktrackingSudokuSolver());
         try {
             sampleBoard.solveGame();
-        } catch (InvalidSudokuException e) {
+        } catch (FillingBoardSudokuException e) {
             e.printStackTrace();
         }
 

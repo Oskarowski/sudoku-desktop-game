@@ -1,14 +1,14 @@
-package sudoku.jdbcdao.exceptions;
+package sudoku.model.exceptions;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Represents a localized exception base class that can be thrown by the JdbcDao
+ * Represents a localized exception base class that can be thrown by the Model
  * module.
  * This exception is used to provide localized error messages to the user.
  */
-public class LocalizedException extends Exception {
+public class LocalizedModelException extends RuntimeException {
     /**
      * Retrieves the localized message for the given message key.
      *
@@ -16,28 +16,29 @@ public class LocalizedException extends Exception {
      * @return the localized message associated with the key
      */
     private static String getLocalizedMessage(String messageKey) {
-        ResourceBundle bundle = ResourceBundle.getBundle("JdbcDaoExceptions", Locale.getDefault());
+        ResourceBundle bundle = ResourceBundle.getBundle("ModelExceptions", Locale.getDefault());
         return bundle.getString(messageKey);
     }
 
     /**
-     * Constructs a new LocalizedException with the specified messenger.
+     * Constructs a new LocalizedModelException with the specified messenger.
      *
-     * @param messenger the JdbcDaoMessageKey representing the localized message
+     * @param messenger the ModelMessageKey representing the localized message
      *                  key.
      */
-    public LocalizedException(JdbcDaoMessageKey messenger) {
+    public LocalizedModelException(ModelMessageKey messenger) {
         super(getLocalizedMessage(messenger.getKey()));
     }
 
     /**
-     * Constructs a new LocalizedException with the specified messenger and cause.
+     * Constructs a new LocalizedModelException with the specified messenger and
+     * cause.
      *
-     * @param messenger the JdbcDaoMessageKey representing the localized message
+     * @param messenger the ModelMessageKey representing the localized message
      *                  key.
      * @param cause     the Throwable that caused this exception to be thrown.
      */
-    public LocalizedException(JdbcDaoMessageKey messenger, Throwable cause) {
+    public LocalizedModelException(ModelMessageKey messenger, Throwable cause) {
         super(getLocalizedMessage(messenger.getKey()), cause);
     }
 }

@@ -1,7 +1,7 @@
 package sudoku.jdbcdao;
 
-import static sudokujdbc.jooq.generated.Tables.SUDOKU_BOARD;
-import static sudokujdbc.jooq.generated.Tables.SUDOKU_FIELD;
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_BOARDS;
+import static sudokujdbc.jooq.generated.Tables.SUDOKU_FIELDS;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,6 +26,9 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
     private DSLContext dsl;
 
     public JdbcSudokuBoardDao(String url) {
+        if (url == null || url.trim().isEmpty()) {
+            throw new IllegalArgumentException("URL cannot be null or empty");
+        }
         this.url = url;
     }
 
@@ -48,18 +51,18 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
             connect();
             connection.setAutoCommit(false);
 
-            var boardId = dsl.insertInto(SUDOKU_BOARD)
-                    .columns(SUDOKU_BOARD.NAME)
+            var boardId = dsl.insertInto(SUDOKU_BOARDS)
+                    .columns(SUDOKU_BOARDS.NAME)
                     .values(name)
-                    .returning(SUDOKU_BOARD.ID)
+                    .returning(SUDOKU_BOARDS.ID)
                     .fetchOne()
                     .getId();
 
             for (int row = 0; row < 9; row++) {
                 for (int col = 0; col < 9; col++) {
                     int value = board.getField(row, col).getValue();
-                    dsl.insertInto(SUDOKU_FIELD)
-                            .columns(SUDOKU_FIELD.BOARD_ID, SUDOKU_FIELD.ROW, SUDOKU_FIELD.COLUMN, SUDOKU_FIELD.VALUE)
+                    dsl.insertInto(SUDOKU_FIELDS)
+                            .columns(SUDOKU_FIELDS.BOARD_ID, SUDOKU_FIELDS.ROW, SUDOKU_FIELDS.COLUMN, SUDOKU_FIELDS.VALUE)
                             .values(boardId, row, col, value)
                             .execute();
                 }
@@ -83,8 +86,8 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
         try {
             connect();
 
-            var boardRecord = dsl.selectFrom(SUDOKU_BOARD)
-                    .where(SUDOKU_BOARD.NAME.eq(name))
+            var boardRecord = dsl.selectFrom(SUDOKU_BOARDS)
+                    .where(SUDOKU_BOARDS.NAME.eq(name))
                     .fetchOne();
 
             if (boardRecord == null) {
@@ -93,8 +96,8 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
 
             SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
 
-            dsl.selectFrom(SUDOKU_FIELD)
-                    .where(SUDOKU_FIELD.BOARD_ID.eq(boardRecord.getId()))
+            dsl.selectFrom(SUDOKU_FIELDS)
+                    .where(SUDOKU_FIELDS.BOARD_ID.eq(boardRecord.getId()))
                     .forEach(record -> {
                         int row = record.getRow();
                         int col = record.getColumn();
@@ -114,9 +117,9 @@ public class JdbcSudokuBoardDao implements Dao<SudokuBoard> {
     public List<String> names() throws JdbcDaoReadException {
         try {
             connect();
-            return dsl.select(SUDOKU_BOARD.NAME)
-                    .from(SUDOKU_BOARD)
-                    .fetch(SUDOKU_BOARD.NAME);
+            return dsl.select(SUDOKU_BOARDS.NAME)
+                    .from(SUDOKU_BOARDS)
+                    .fetch(SUDOKU_BOARDS.NAME);
         } catch (Exception e) {
             throw new JdbcDaoReadException(e);
         } finally {

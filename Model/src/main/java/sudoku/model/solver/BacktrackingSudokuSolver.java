@@ -1,29 +1,24 @@
 package sudoku.model.solver;
 
-import sudoku.model.exceptions.InvalidSudokuException;
+import sudoku.model.exceptions.FillingBoardSudokuException;
 import sudoku.model.models.SudokuBoard;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class BacktrackingSudokuSolver implements SudokuSolver {
     final int sudokuBoardSize = SudokuBoard.BOARD_SIZE;
-    Locale locale = Locale.getDefault();
-    private transient ResourceBundle exceptionsBundle = ResourceBundle
-            .getBundle("sudoku.model.bundles.exceptions", locale);
 
     @Override
-    public void solve(SudokuBoard board) throws InvalidSudokuException {
+    public void solve(SudokuBoard board) throws FillingBoardSudokuException {
         fillBoard(board);
     }
 
     @Override
-    public void fillBoard(SudokuBoard board) throws InvalidSudokuException {
+    public void fillBoard(SudokuBoard board) throws FillingBoardSudokuException {
         if (!fillBoardRecursive(0, 0, board)) {
-            throw new InvalidSudokuException(exceptionsBundle.getString("error.FillBoard"));
+            throw new FillingBoardSudokuException();
         }
     }
 
@@ -82,10 +77,5 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         board.getField(col, row).setValue(previousValue);
 
         return validPlacement;
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-        exceptionsBundle = ResourceBundle.getBundle("sudoku.model.bundles.exceptions", locale);
     }
 }
